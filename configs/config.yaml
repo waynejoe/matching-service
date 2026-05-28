@@ -1,0 +1,29 @@
+server:
+  grpc:
+    addr: ":9203"
+  metrics:
+    addr: ":8203"
+data:
+  mysql:
+    driver: mysql
+    source: "root:123456@tcp(localhost:3306)/syntra_match?parseTime=true&loc=Asia%2FShanghai&charset=utf8mb4&collation=utf8mb4_0900_ai_ci"
+  redis:
+    addr: "127.0.0.1:6379"
+    password: ""
+    db: 0
+  rocketmq:
+    name_servers:
+      - "127.0.0.1:9876"
+    deposit_topic: "match_deposit"
+    withdraw_topic: "match_withdraw"
+    consumer_group: "matching-service"
+    max_reconsume_times: 16
+    suspend_queue_millis: 1000
+    dead_letter_topic_remark: "%DLQ%matching-service"
+match:
+  min_complete_rate: 3000
+  deposit_ttl_min: 30
+  basket_limit: 10000
+  shard_lock_ttl_second: 30
+  expire_interval_sec: 5
+  expire_batch_size: 500

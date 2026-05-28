@@ -1,0 +1,302 @@
+syntax = "proto3";
+
+package matching.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "matching-service/pb/matching/v1;v1";
+
+// MatchingService 是撮合服务的 gRPC 接口。
+service MatchingService {
+  // CreateBasket 创建出金撮合篮子。
+  rpc CreateBasket(CreateBasketRequest) returns (CreateBasketReply);
+  // SubmitDeposit 提交入金单并尝试撮合。
+  rpc SubmitDeposit(SubmitDepositRequest) returns (SubmitDepositReply);
+  // ExpireTimeouts 处理超时的入金单和出金篮子。
+  rpc ExpireTimeouts(ExpireTimeoutsRequest) returns (ExpireTimeoutsReply);
+  // GetDeposit 查询入金单。
+  rpc GetDeposit(GetDepositRequest) returns (GetDepositReply);
+  // GetBasket 查询出金撮合篮子。
+  rpc GetBasket(GetBasketRequest) returns (GetBasketReply);
+  // GetMatch 查询撮合记录。
+  rpc GetMatch(GetMatchRequest) returns (GetMatchReply);
+  // CheckHealth 检查服务依赖健康状态。
+  rpc CheckHealth(CheckHealthRequest) returns (CheckHealthReply);
+  // GetMetrics 查询服务运行指标。
+  rpc GetMetrics(GetMetricsRequest) returns (GetMetricsReply);
+}
+
+// CreateBasketRequest 是创建出金撮合篮子的请求。
+message CreateBasketRequest {
+  // basket_no 是撮合篮子编号。
+  string basket_no = 1;
+  // withdraw_no 是出金单号。
+  string withdraw_no = 2;
+  // channel 是支付渠道。
+  string channel = 3;
+  // currency 是币种。
+  string currency = 4;
+  // target_amount 是出金目标金额，使用最小货币单位。
+  int64 target_amount = 5;
+  // expire_at 是篮子过期时间。
+  google.protobuf.Timestamp expire_at = 7;
+  reserved 6;
+}
+
+// CreateBasketReply 是创建出金撮合篮子的响应。
+message CreateBasketReply {
+  // basket_no 是撮合篮子编号。
+  string basket_no = 1;
+}
+
+// SubmitDepositRequest 是提交入金单的请求。
+message SubmitDepositRequest {
+  // deposit_no 是入金单号。
+  string deposit_no = 1;
+  // channel 是支付渠道。
+  string channel = 2;
+  // currency 是币种。
+  string currency = 3;
+  // amount 是入金金额，使用最小货币单位。
+  int64 amount = 4;
+  // expire_at 是入金单过期时间。
+  google.protobuf.Timestamp expire_at = 5;
+}
+
+// SubmitDepositReply 是提交入金单的响应。
+message SubmitDepositReply {
+  // result 是本次入金撮合结果。
+  MatchResult result = 1;
+}
+
+// ExpireTimeoutsRequest 是处理超时数据的请求。
+message ExpireTimeoutsRequest {
+  // now_unix 是当前 Unix 秒级时间戳。
+  int64 now_unix = 1;
+  // limit 是本次最多处理数量。
+  int32 limit = 2;
+}
+
+// ExpireTimeoutsReply 是处理超时数据的响应。
+message ExpireTimeoutsReply {
+  // waiting_deposits 是已处理的等待中入金单数量。
+  int32 waiting_deposits = 1;
+  // locked_deposits 是已处理的锁定中入金单数量。
+  int32 locked_deposits = 2;
+  // baskets 是已处理的出金篮子数量。
+  int32 baskets = 3;
+}
+
+// GetDepositRequest 是查询入金单的请求。
+message GetDepositRequest {
+  // deposit_no 是入金单号。
+  string deposit_no = 1;
+}
+
+// GetDepositReply 是查询入金单的响应。
+message GetDepositReply {
+  // deposit 是入金单数据。
+  DepositOrder deposit = 1;
+}
+
+// GetBasketRequest 是查询出金篮子的请求。
+message GetBasketRequest {
+  // basket_no 是撮合篮子编号。
+  string basket_no = 1;
+}
+
+// GetBasketReply 是查询出金篮子的响应。
+message GetBasketReply {
+  // basket 是出金撮合篮子数据。
+  WithdrawBasket basket = 1;
+}
+
+// GetMatchRequest 是查询撮合记录的请求。
+message GetMatchRequest {
+  // match_no 是撮合记录编号。
+  string match_no = 1;
+  // basket_no 是撮合篮子编号。
+  string basket_no = 2;
+  // withdraw_no 是出金单号。
+  string withdraw_no = 3;
+}
+
+// GetMatchReply 是查询撮合记录的响应。
+message GetMatchReply {
+  // match 是撮合主记录。
+  MatchRecord match = 1;
+  // deposits 是参与撮合的入金明细。
+  repeated MatchRecordDeposit deposits = 2;
+}
+
+// CheckHealthRequest 是健康检查请求。
+message CheckHealthRequest {}
+
+// CheckHealthReply 是健康检查响应。
+message CheckHealthReply {
+  // ok 表示整体是否健康。
+  bool ok = 1;
+  // components 是各依赖组件的健康状态。
+  repeated HealthComponent components = 2;
+}
+
+// HealthComponent 是单个依赖组件的健康状态。
+message HealthComponent {
+  // name 是组件名称。
+  string name = 1;
+  // ok 表示组件是否健康。
+  bool ok = 2;
+  // message 是组件健康说明。
+  string message = 3;
+}
+
+// GetMetricsRequest 是指标查询请求。
+message GetMetricsRequest {}
+
+// GetMetricsReply 是指标查询响应。
+message GetMetricsReply {
+  // deposit_consume_success 是入金消息消费成功次数。
+  int64 deposit_consume_success = 1;
+  // deposit_consume_failed 是入金消息消费失败次数。
+  int64 deposit_consume_failed = 2;
+  // withdraw_consume_success 是出金消息消费成功次数。
+  int64 withdraw_consume_success = 3;
+  // withdraw_consume_failed 是出金消息消费失败次数。
+  int64 withdraw_consume_failed = 4;
+  // match_success 是足额撮合成功次数。
+  int64 match_success = 5;
+  // short_match_success 是少发撮合成功次数。
+  int64 short_match_success = 6;
+  // expired_waiting_deposits 是等待中入金单过期次数。
+  int64 expired_waiting_deposits = 7;
+  // expired_locked_deposits 是锁定中入金单过期次数。
+  int64 expired_locked_deposits = 8;
+  // expired_baskets 是出金篮子过期次数。
+  int64 expired_baskets = 9;
+  // event_failed 是事件处理失败次数。
+  int64 event_failed = 10;
+  // event_retried 是事件重试次数。
+  int64 event_retried = 11;
+}
+
+// MatchResult 是一次撮合尝试的结果。
+message MatchResult {
+  // matched 表示是否已完成撮合。
+  bool matched = 1;
+  // attached 表示入金单是否已挂入篮子。
+  bool attached = 2;
+  // basket_no 是撮合篮子编号。
+  string basket_no = 3;
+  // withdraw_no 是出金单号。
+  string withdraw_no = 4;
+  // channel 是支付渠道。
+  string channel = 5;
+  // currency 是币种。
+  string currency = 6;
+  // deposit_nos 是参与撮合的入金单号列表。
+  repeated string deposit_nos = 7;
+  // target_amount 是出金目标金额，使用最小货币单位。
+  int64 target_amount = 8;
+  // matched_amount 是已撮合金额，使用最小货币单位。
+  int64 matched_amount = 9;
+  // short_amount 是少发金额，使用最小货币单位。
+  int64 short_amount = 10;
+  // pending 表示撮合是否仍在等待更多入金。
+  bool pending = 11;
+  // failed_reason 是撮合失败原因。
+  string failed_reason = 12;
+}
+
+// DepositOrder 是入金单数据。
+message DepositOrder {
+  // deposit_no 是入金单号。
+  string deposit_no = 1;
+  // merchant_id 是商户编号。
+  int64 merchant_id = 2;
+  // channel 是支付渠道。
+  string channel = 3;
+  // currency 是币种。
+  string currency = 4;
+  // amount 是入金金额，使用最小货币单位。
+  int64 amount = 5;
+  // status 是入金单状态。
+  int32 status = 6;
+  // expire_at 是入金单过期时间。
+  google.protobuf.Timestamp expire_at = 7;
+  // matched_basket_no 是已匹配的撮合篮子编号。
+  string matched_basket_no = 8;
+  // match_no 是撮合记录编号。
+  string match_no = 9;
+  // created_at 是创建时间。
+  google.protobuf.Timestamp created_at = 10;
+  // updated_at 是更新时间。
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+// WithdrawBasket 是出金撮合篮子数据。
+message WithdrawBasket {
+  // basket_no 是撮合篮子编号。
+  string basket_no = 1;
+  // withdraw_no 是出金单号。
+  string withdraw_no = 2;
+  // merchant_id 是商户编号。
+  int64 merchant_id = 3;
+  // channel 是支付渠道。
+  string channel = 4;
+  // currency 是币种。
+  string currency = 5;
+  // target_amount 是出金目标金额，使用最小货币单位。
+  int64 target_amount = 6;
+  // current_amount 是篮子当前已凑金额，使用最小货币单位。
+  int64 current_amount = 7;
+  // status 是篮子状态。
+  int32 status = 8;
+  // expire_at 是篮子过期时间。
+  google.protobuf.Timestamp expire_at = 9;
+  // version 是乐观锁版本号。
+  int64 version = 10;
+  // created_at 是创建时间。
+  google.protobuf.Timestamp created_at = 11;
+  // updated_at 是更新时间。
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+// MatchRecord 是撮合主记录。
+message MatchRecord {
+  // match_no 是撮合记录编号。
+  string match_no = 1;
+  // basket_no 是撮合篮子编号。
+  string basket_no = 2;
+  // withdraw_no 是出金单号。
+  string withdraw_no = 3;
+  // target_amount 是出金目标金额，使用最小货币单位。
+  int64 target_amount = 4;
+  // matched_amount 是实际撮合金额，使用最小货币单位。
+  int64 matched_amount = 5;
+  // short_amount 是少发金额，使用最小货币单位。
+  int64 short_amount = 6;
+  // channel 是支付渠道。
+  string channel = 7;
+  // currency 是币种。
+  string currency = 8;
+  // status 是撮合记录状态。
+  int32 status = 9;
+  // created_at 是创建时间。
+  google.protobuf.Timestamp created_at = 10;
+  // updated_at 是更新时间。
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+// MatchRecordDeposit 是撮合记录里的入金明细。
+message MatchRecordDeposit {
+  // match_no 是撮合记录编号。
+  string match_no = 1;
+  // withdraw_no 是出金单号。
+  string withdraw_no = 2;
+  // deposit_no 是入金单号。
+  string deposit_no = 3;
+  // amount 是入金金额，使用最小货币单位。
+  int64 amount = 4;
+  // created_at 是创建时间。
+  google.protobuf.Timestamp created_at = 5;
+}

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROCKETMQ_BROKER_CONTAINER="${ROCKETMQ_BROKER_CONTAINER:-rmqbroker}"
+ROCKETMQ_NAMESRV="${ROCKETMQ_NAMESRV:-rmqnamesrv:9876}"
+ROCKETMQ_GROUP="${ROCKETMQ_GROUP:-matching-service}"
+ROCKETMQ_DEPOSIT_TOPIC="${ROCKETMQ_DEPOSIT_TOPIC:-match_deposit}"
+ROCKETMQ_WITHDRAW_TOPIC="${ROCKETMQ_WITHDRAW_TOPIC:-match_withdraw}"
+ROCKETMQ_HOME="${ROCKETMQ_HOME:-/home/rocketmq/rocketmq-5.3.2}"
+
+# 列出本服务相关 topic。
+docker exec "${ROCKETMQ_BROKER_CONTAINER}" sh -lc "cd ${ROCKETMQ_HOME}/bin && ./mqadmin topicList -n ${ROCKETMQ_NAMESRV}" |
+	grep -E "${ROCKETMQ_DEPOSIT_TOPIC}|${ROCKETMQ_WITHDRAW_TOPIC}|%RETRY%${ROCKETMQ_GROUP}|%DLQ%${ROCKETMQ_GROUP}"
