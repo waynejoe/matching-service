@@ -10,7 +10,7 @@ import (
 
 	"matching-service/internal/conf"
 	"matching-service/internal/service"
-	v1 "matching-service/pb/matching/v1"
+	v1 "matching-service/api/matching/v1"
 )
 
 // GRPCServer 是 gRPC 服务封装。

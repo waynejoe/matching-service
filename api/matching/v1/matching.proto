@@ -4,7 +4,7 @@ package matching.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "matching-service/pb/matching/v1;v1";
+option go_package = "matching-service/api/matching/v1;v1";
 
 // MatchingService 是撮合服务的 gRPC 接口。
 service MatchingService {
@@ -285,6 +285,26 @@ message MatchRecord {
   google.protobuf.Timestamp created_at = 10;
   // updated_at 是更新时间。
   google.protobuf.Timestamp updated_at = 11;
+}
+
+// DepositEventMessage 是入金 RocketMQ 消息信封。
+message DepositEventMessage {
+  // event_id 是幂等事件 ID。
+  string event_id = 1;
+  // topic 是 RocketMQ 主题。
+  string topic = 2;
+  // data 是入金单数据。
+  DepositOrder data = 3;
+}
+
+// WithdrawEventMessage 是出金 RocketMQ 消息信封。
+message WithdrawEventMessage {
+  // event_id 是幂等事件 ID。
+  string event_id = 1;
+  // topic 是 RocketMQ 主题。
+  string topic = 2;
+  // data 是出金篮子数据。
+  WithdrawBasket data = 3;
 }
 
 // MatchRecordDeposit 是撮合记录里的入金明细。

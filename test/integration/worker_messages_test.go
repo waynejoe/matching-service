@@ -9,8 +9,11 @@ import (
 	"testing"
 	"time"
 
+	"google.golang.org/protobuf/types/known/timestamppb"
+
 	"matching-service/internal/model"
 	"matching-service/internal/service"
+	v1 "matching-service/api/matching/v1"
 )
 
 // TestWorkerMessagesPartialMatchSucceeded 验证 RocketMQ 消息入口可以完成少发成交。
@@ -24,31 +27,31 @@ func TestWorkerMessagesPartialMatchSucceeded(t *testing.T) {
 
 	matchingConsumer := service.NewMatchingConsumer(env.uc, env.m)
 	expireAt := time.Now().Add(time.Hour)
-	withdrawBody := mustJSON(t, service.WithdrawEventMessage{
-		EventID: prefix + "_WE",
+	withdrawBody := mustJSON(t, &v1.WithdrawEventMessage{
+		EventId: prefix + "_WE",
 		Topic:   env.cfg.Data.RocketMQ.WithdrawTopic,
-		Data: model.WithdrawBasket{
+		Data: &v1.WithdrawBasket{
 			BasketNo:     prefix + "_B",
 			WithdrawNo:   prefix + "_W",
 			Channel:      "IT_WORKER",
 			Currency:     "TST",
 			TargetAmount: 1000,
-			ExpireAt:     expireAt,
+			ExpireAt:     timestamppb.New(expireAt),
 		},
 	})
 	if err := matchingConsumer.HandleWithdrawMessage(ctx, withdrawBody); err != nil {
 		t.Fatalf("处理出金消息失败: %v", err)
 	}
 
-	depositBody := mustJSON(t, service.DepositEventMessage{
-		EventID: prefix + "_DE",
+	depositBody := mustJSON(t, &v1.DepositEventMessage{
+		EventId: prefix + "_DE",
 		Topic:   env.cfg.Data.RocketMQ.DepositTopic,
-		Data: model.DepositOrder{
+		Data: &v1.DepositOrder{
 			DepositNo: prefix + "_D",
 			Channel:   "IT_WORKER",
 			Currency:  "TST",
 			Amount:    300,
-			ExpireAt:  expireAt.Add(time.Hour),
+			ExpireAt:  timestamppb.New(expireAt.Add(time.Hour)),
 		},
 	})
 	if err := matchingConsumer.HandleDepositMessage(ctx, depositBody); err != nil {
@@ -79,16 +82,16 @@ func TestWorkerMessageFailedThenRetried(t *testing.T) {
 	defer env.cleanup(t, prefix)
 
 	matchingConsumer := service.NewMatchingConsumer(env.uc, env.m)
-	expiredBody := mustJSON(t, service.WithdrawEventMessage{
-		EventID: prefix + "_WE",
+	expiredBody := mustJSON(t, &v1.WithdrawEventMessage{
+		EventId: prefix + "_WE",
 		Topic:   env.cfg.Data.RocketMQ.WithdrawTopic,
-		Data: model.WithdrawBasket{
+		Data: &v1.WithdrawBasket{
 			BasketNo:     prefix + "_B",
 			WithdrawNo:   prefix + "_W",
 			Channel:      "IT_WORKER_RETRY",
 			Currency:     "TST",
 			TargetAmount: 1000,
-			ExpireAt:     time.Now().Add(-time.Minute),
+			ExpireAt:     timestamppb.New(time.Now().Add(-time.Minute)),
 		},
 	})
 	if err := matchingConsumer.HandleWithdrawMessage(ctx, expiredBody); err == nil {
@@ -96,16 +99,16 @@ func TestWorkerMessageFailedThenRetried(t *testing.T) {
 	}
 	assertEventStatus(t, env, prefix+"_W", model.EventStatusFailed)
 
-	validBody := mustJSON(t, service.WithdrawEventMessage{
-		EventID: prefix + "_WE",
+	validBody := mustJSON(t, &v1.WithdrawEventMessage{
+		EventId: prefix + "_WE",
 		Topic:   env.cfg.Data.RocketMQ.WithdrawTopic,
-		Data: model.WithdrawBasket{
+		Data: &v1.WithdrawBasket{
 			BasketNo:     prefix + "_B",
 			WithdrawNo:   prefix + "_W",
 			Channel:      "IT_WORKER_RETRY",
 			Currency:     "TST",
 			TargetAmount: 1000,
-			ExpireAt:     time.Now().Add(time.Hour),
+			ExpireAt:     timestamppb.New(time.Now().Add(time.Hour)),
 		},
 	})
 	if err := matchingConsumer.HandleWithdrawMessage(ctx, validBody); err != nil {

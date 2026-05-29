@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"matching-service/internal/biz"
-	v1 "matching-service/pb/matching/v1"
+	v1 "matching-service/api/matching/v1"
 )
 
 // GetMetrics 返回服务运行指标。

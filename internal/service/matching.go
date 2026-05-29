@@ -13,7 +13,7 @@ import (
 	"matching-service/internal/biz"
 	"matching-service/internal/engine"
 	"matching-service/internal/model"
-	v1 "matching-service/pb/matching/v1"
+	v1 "matching-service/api/matching/v1"
 )
 
 // MatchingService 是撮合 gRPC 服务。

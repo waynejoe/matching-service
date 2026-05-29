@@ -1600,6 +1600,134 @@ func (x *MatchRecord) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+// DepositEventMessage 是入金 RocketMQ 消息信封。
+type DepositEventMessage struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// event_id 是幂等事件 ID。
+	EventId string `protobuf:"bytes,1,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
+	// topic 是 RocketMQ 主题。
+	Topic string `protobuf:"bytes,2,opt,name=topic,proto3" json:"topic,omitempty"`
+	// data 是入金单数据。
+	Data          *DepositOrder `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DepositEventMessage) Reset() {
+	*x = DepositEventMessage{}
+	mi := &file_api_matching_v1_matching_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DepositEventMessage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DepositEventMessage) ProtoMessage() {}
+
+func (x *DepositEventMessage) ProtoReflect() protoreflect.Message {
+	mi := &file_api_matching_v1_matching_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DepositEventMessage.ProtoReflect.Descriptor instead.
+func (*DepositEventMessage) Descriptor() ([]byte, []int) {
+	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *DepositEventMessage) GetEventId() string {
+	if x != nil {
+		return x.EventId
+	}
+	return ""
+}
+
+func (x *DepositEventMessage) GetTopic() string {
+	if x != nil {
+		return x.Topic
+	}
+	return ""
+}
+
+func (x *DepositEventMessage) GetData() *DepositOrder {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+// WithdrawEventMessage 是出金 RocketMQ 消息信封。
+type WithdrawEventMessage struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// event_id 是幂等事件 ID。
+	EventId string `protobuf:"bytes,1,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
+	// topic 是 RocketMQ 主题。
+	Topic string `protobuf:"bytes,2,opt,name=topic,proto3" json:"topic,omitempty"`
+	// data 是出金篮子数据。
+	Data          *WithdrawBasket `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WithdrawEventMessage) Reset() {
+	*x = WithdrawEventMessage{}
+	mi := &file_api_matching_v1_matching_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WithdrawEventMessage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WithdrawEventMessage) ProtoMessage() {}
+
+func (x *WithdrawEventMessage) ProtoReflect() protoreflect.Message {
+	mi := &file_api_matching_v1_matching_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WithdrawEventMessage.ProtoReflect.Descriptor instead.
+func (*WithdrawEventMessage) Descriptor() ([]byte, []int) {
+	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *WithdrawEventMessage) GetEventId() string {
+	if x != nil {
+		return x.EventId
+	}
+	return ""
+}
+
+func (x *WithdrawEventMessage) GetTopic() string {
+	if x != nil {
+		return x.Topic
+	}
+	return ""
+}
+
+func (x *WithdrawEventMessage) GetData() *WithdrawBasket {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
 // MatchRecordDeposit 是撮合记录里的入金明细。
 type MatchRecordDeposit struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1619,7 +1747,7 @@ type MatchRecordDeposit struct {
 
 func (x *MatchRecordDeposit) Reset() {
 	*x = MatchRecordDeposit{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[21]
+	mi := &file_api_matching_v1_matching_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1631,7 +1759,7 @@ func (x *MatchRecordDeposit) String() string {
 func (*MatchRecordDeposit) ProtoMessage() {}
 
 func (x *MatchRecordDeposit) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[21]
+	mi := &file_api_matching_v1_matching_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1644,7 +1772,7 @@ func (x *MatchRecordDeposit) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MatchRecordDeposit.ProtoReflect.Descriptor instead.
 func (*MatchRecordDeposit) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{21}
+	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *MatchRecordDeposit) GetMatchNo() string {
@@ -1820,7 +1948,15 @@ const file_api_matching_v1_matching_proto_rawDesc = "" +
 	"created_at\x18\n" +
 	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xc2\x01\n" +
+	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"u\n" +
+	"\x13DepositEventMessage\x12\x19\n" +
+	"\bevent_id\x18\x01 \x01(\tR\aeventId\x12\x14\n" +
+	"\x05topic\x18\x02 \x01(\tR\x05topic\x12-\n" +
+	"\x04data\x18\x03 \x01(\v2\x19.matching.v1.DepositOrderR\x04data\"x\n" +
+	"\x14WithdrawEventMessage\x12\x19\n" +
+	"\bevent_id\x18\x01 \x01(\tR\aeventId\x12\x14\n" +
+	"\x05topic\x18\x02 \x01(\tR\x05topic\x12/\n" +
+	"\x04data\x18\x03 \x01(\v2\x1b.matching.v1.WithdrawBasketR\x04data\"\xc2\x01\n" +
 	"\x12MatchRecordDeposit\x12\x19\n" +
 	"\bmatch_no\x18\x01 \x01(\tR\amatchNo\x12\x1f\n" +
 	"\vwithdraw_no\x18\x02 \x01(\tR\n" +
@@ -1840,7 +1976,7 @@ const file_api_matching_v1_matching_proto_rawDesc = "" +
 	"\bGetMatch\x12\x1c.matching.v1.GetMatchRequest\x1a\x1a.matching.v1.GetMatchReply\x12M\n" +
 	"\vCheckHealth\x12\x1f.matching.v1.CheckHealthRequest\x1a\x1d.matching.v1.CheckHealthReply\x12J\n" +
 	"\n" +
-	"GetMetrics\x12\x1e.matching.v1.GetMetricsRequest\x1a\x1c.matching.v1.GetMetricsReplyB$Z\"matching-service/pb/matching/v1;v1b\x06proto3"
+	"GetMetrics\x12\x1e.matching.v1.GetMetricsRequest\x1a\x1c.matching.v1.GetMetricsReplyB%Z#matching-service/api/matching/v1;v1b\x06proto3"
 
 var (
 	file_api_matching_v1_matching_proto_rawDescOnce sync.Once
@@ -1854,7 +1990,7 @@ func file_api_matching_v1_matching_proto_rawDescGZIP() []byte {
 	return file_api_matching_v1_matching_proto_rawDescData
 }
 
-var file_api_matching_v1_matching_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_api_matching_v1_matching_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
 var file_api_matching_v1_matching_proto_goTypes = []any{
 	(*CreateBasketRequest)(nil),   // 0: matching.v1.CreateBasketRequest
 	(*CreateBasketReply)(nil),     // 1: matching.v1.CreateBasketReply
@@ -1877,48 +2013,52 @@ var file_api_matching_v1_matching_proto_goTypes = []any{
 	(*DepositOrder)(nil),          // 18: matching.v1.DepositOrder
 	(*WithdrawBasket)(nil),        // 19: matching.v1.WithdrawBasket
 	(*MatchRecord)(nil),           // 20: matching.v1.MatchRecord
-	(*MatchRecordDeposit)(nil),    // 21: matching.v1.MatchRecordDeposit
-	(*timestamppb.Timestamp)(nil), // 22: google.protobuf.Timestamp
+	(*DepositEventMessage)(nil),   // 21: matching.v1.DepositEventMessage
+	(*WithdrawEventMessage)(nil),  // 22: matching.v1.WithdrawEventMessage
+	(*MatchRecordDeposit)(nil),    // 23: matching.v1.MatchRecordDeposit
+	(*timestamppb.Timestamp)(nil), // 24: google.protobuf.Timestamp
 }
 var file_api_matching_v1_matching_proto_depIdxs = []int32{
-	22, // 0: matching.v1.CreateBasketRequest.expire_at:type_name -> google.protobuf.Timestamp
-	22, // 1: matching.v1.SubmitDepositRequest.expire_at:type_name -> google.protobuf.Timestamp
+	24, // 0: matching.v1.CreateBasketRequest.expire_at:type_name -> google.protobuf.Timestamp
+	24, // 1: matching.v1.SubmitDepositRequest.expire_at:type_name -> google.protobuf.Timestamp
 	17, // 2: matching.v1.SubmitDepositReply.result:type_name -> matching.v1.MatchResult
 	18, // 3: matching.v1.GetDepositReply.deposit:type_name -> matching.v1.DepositOrder
 	19, // 4: matching.v1.GetBasketReply.basket:type_name -> matching.v1.WithdrawBasket
 	20, // 5: matching.v1.GetMatchReply.match:type_name -> matching.v1.MatchRecord
-	21, // 6: matching.v1.GetMatchReply.deposits:type_name -> matching.v1.MatchRecordDeposit
+	23, // 6: matching.v1.GetMatchReply.deposits:type_name -> matching.v1.MatchRecordDeposit
 	14, // 7: matching.v1.CheckHealthReply.components:type_name -> matching.v1.HealthComponent
-	22, // 8: matching.v1.DepositOrder.expire_at:type_name -> google.protobuf.Timestamp
-	22, // 9: matching.v1.DepositOrder.created_at:type_name -> google.protobuf.Timestamp
-	22, // 10: matching.v1.DepositOrder.updated_at:type_name -> google.protobuf.Timestamp
-	22, // 11: matching.v1.WithdrawBasket.expire_at:type_name -> google.protobuf.Timestamp
-	22, // 12: matching.v1.WithdrawBasket.created_at:type_name -> google.protobuf.Timestamp
-	22, // 13: matching.v1.WithdrawBasket.updated_at:type_name -> google.protobuf.Timestamp
-	22, // 14: matching.v1.MatchRecord.created_at:type_name -> google.protobuf.Timestamp
-	22, // 15: matching.v1.MatchRecord.updated_at:type_name -> google.protobuf.Timestamp
-	22, // 16: matching.v1.MatchRecordDeposit.created_at:type_name -> google.protobuf.Timestamp
-	0,  // 17: matching.v1.MatchingService.CreateBasket:input_type -> matching.v1.CreateBasketRequest
-	2,  // 18: matching.v1.MatchingService.SubmitDeposit:input_type -> matching.v1.SubmitDepositRequest
-	4,  // 19: matching.v1.MatchingService.ExpireTimeouts:input_type -> matching.v1.ExpireTimeoutsRequest
-	6,  // 20: matching.v1.MatchingService.GetDeposit:input_type -> matching.v1.GetDepositRequest
-	8,  // 21: matching.v1.MatchingService.GetBasket:input_type -> matching.v1.GetBasketRequest
-	10, // 22: matching.v1.MatchingService.GetMatch:input_type -> matching.v1.GetMatchRequest
-	12, // 23: matching.v1.MatchingService.CheckHealth:input_type -> matching.v1.CheckHealthRequest
-	15, // 24: matching.v1.MatchingService.GetMetrics:input_type -> matching.v1.GetMetricsRequest
-	1,  // 25: matching.v1.MatchingService.CreateBasket:output_type -> matching.v1.CreateBasketReply
-	3,  // 26: matching.v1.MatchingService.SubmitDeposit:output_type -> matching.v1.SubmitDepositReply
-	5,  // 27: matching.v1.MatchingService.ExpireTimeouts:output_type -> matching.v1.ExpireTimeoutsReply
-	7,  // 28: matching.v1.MatchingService.GetDeposit:output_type -> matching.v1.GetDepositReply
-	9,  // 29: matching.v1.MatchingService.GetBasket:output_type -> matching.v1.GetBasketReply
-	11, // 30: matching.v1.MatchingService.GetMatch:output_type -> matching.v1.GetMatchReply
-	13, // 31: matching.v1.MatchingService.CheckHealth:output_type -> matching.v1.CheckHealthReply
-	16, // 32: matching.v1.MatchingService.GetMetrics:output_type -> matching.v1.GetMetricsReply
-	25, // [25:33] is the sub-list for method output_type
-	17, // [17:25] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	24, // 8: matching.v1.DepositOrder.expire_at:type_name -> google.protobuf.Timestamp
+	24, // 9: matching.v1.DepositOrder.created_at:type_name -> google.protobuf.Timestamp
+	24, // 10: matching.v1.DepositOrder.updated_at:type_name -> google.protobuf.Timestamp
+	24, // 11: matching.v1.WithdrawBasket.expire_at:type_name -> google.protobuf.Timestamp
+	24, // 12: matching.v1.WithdrawBasket.created_at:type_name -> google.protobuf.Timestamp
+	24, // 13: matching.v1.WithdrawBasket.updated_at:type_name -> google.protobuf.Timestamp
+	24, // 14: matching.v1.MatchRecord.created_at:type_name -> google.protobuf.Timestamp
+	24, // 15: matching.v1.MatchRecord.updated_at:type_name -> google.protobuf.Timestamp
+	18, // 16: matching.v1.DepositEventMessage.data:type_name -> matching.v1.DepositOrder
+	19, // 17: matching.v1.WithdrawEventMessage.data:type_name -> matching.v1.WithdrawBasket
+	24, // 18: matching.v1.MatchRecordDeposit.created_at:type_name -> google.protobuf.Timestamp
+	0,  // 19: matching.v1.MatchingService.CreateBasket:input_type -> matching.v1.CreateBasketRequest
+	2,  // 20: matching.v1.MatchingService.SubmitDeposit:input_type -> matching.v1.SubmitDepositRequest
+	4,  // 21: matching.v1.MatchingService.ExpireTimeouts:input_type -> matching.v1.ExpireTimeoutsRequest
+	6,  // 22: matching.v1.MatchingService.GetDeposit:input_type -> matching.v1.GetDepositRequest
+	8,  // 23: matching.v1.MatchingService.GetBasket:input_type -> matching.v1.GetBasketRequest
+	10, // 24: matching.v1.MatchingService.GetMatch:input_type -> matching.v1.GetMatchRequest
+	12, // 25: matching.v1.MatchingService.CheckHealth:input_type -> matching.v1.CheckHealthRequest
+	15, // 26: matching.v1.MatchingService.GetMetrics:input_type -> matching.v1.GetMetricsRequest
+	1,  // 27: matching.v1.MatchingService.CreateBasket:output_type -> matching.v1.CreateBasketReply
+	3,  // 28: matching.v1.MatchingService.SubmitDeposit:output_type -> matching.v1.SubmitDepositReply
+	5,  // 29: matching.v1.MatchingService.ExpireTimeouts:output_type -> matching.v1.ExpireTimeoutsReply
+	7,  // 30: matching.v1.MatchingService.GetDeposit:output_type -> matching.v1.GetDepositReply
+	9,  // 31: matching.v1.MatchingService.GetBasket:output_type -> matching.v1.GetBasketReply
+	11, // 32: matching.v1.MatchingService.GetMatch:output_type -> matching.v1.GetMatchReply
+	13, // 33: matching.v1.MatchingService.CheckHealth:output_type -> matching.v1.CheckHealthReply
+	16, // 34: matching.v1.MatchingService.GetMetrics:output_type -> matching.v1.GetMetricsReply
+	27, // [27:35] is the sub-list for method output_type
+	19, // [19:27] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_api_matching_v1_matching_proto_init() }
@@ -1932,7 +2072,7 @@ func file_api_matching_v1_matching_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_matching_v1_matching_proto_rawDesc), len(file_api_matching_v1_matching_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   22,
+			NumMessages:   24,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

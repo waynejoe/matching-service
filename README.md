@@ -8,7 +8,7 @@
 matching-service/
 ├── api/
 │   └── matching/
-│       └── v1/                 # proto 接口定义
+│       └── v1/                 # proto 定义及生成代码
 ├── cmd/
 │   └── matching-service/       # 服务启动入口
 ├── configs/                    # 配置文件
@@ -17,12 +17,9 @@ matching-service/
 │   ├── conf/                   # 配置结构
 │   ├── data/                   # MySQL 表级访问层
 │   ├── engine/                 # 撮合引擎核心逻辑
-│   ├── model/                  # 撮合核心模型
+│   ├── model/                  # GORM 数据模型
 │   ├── server/                 # gRPC、RocketMQ、Prometheus、后台任务等运行入口
-│   └── service/                # gRPC、MQ、Job 等接口适配
-├── pb/
-│   └── matching/
-│       └── v1/                 # proto 生成代码
+│   └── service/                # gRPC 接口实现、MQ 消息处理
 ├── pkg/
 │   ├── idgen/                  # 可复用 ID 生成工具
 │   └── lock/                   # 可复用 Redis 分布式锁
@@ -162,18 +159,20 @@ make rocketmq-replay KIND=withdraw BODY_FILE=/tmp/withdraw-dlq.json
 
 ## RocketMQ 消息格式
 
+消息 envelope 和 data 统一由 proto 定义（`api/matching/v1/matching.proto`），JSON 序列化使用 proto3 标准的 snake_case 字段名。
+
 入金 topic：
 
 ```json
 {
-  "eventId": "deposit-event-001",
+  "event_id": "deposit-event-001",
   "topic": "match_deposit",
   "data": {
-    "depositNo": "D001",
+    "deposit_no": "D001",
     "channel": "bank",
     "currency": "CNY",
     "amount": 10000,
-    "expireAt": "2026-05-27T12:00:00+08:00"
+    "expire_at": "2026-05-27T12:00:00Z"
   }
 }
 ```
@@ -182,15 +181,15 @@ make rocketmq-replay KIND=withdraw BODY_FILE=/tmp/withdraw-dlq.json
 
 ```json
 {
-  "eventId": "withdraw-event-001",
+  "event_id": "withdraw-event-001",
   "topic": "match_withdraw",
   "data": {
-    "basketNo": "B001",
-    "withdrawNo": "W001",
+    "basket_no": "B001",
+    "withdraw_no": "W001",
     "channel": "bank",
     "currency": "CNY",
-    "targetAmount": 50000,
-    "expireAt": "2026-05-27T12:30:00+08:00"
+    "target_amount": 50000,
+    "expire_at": "2026-05-27T12:30:00Z"
   }
 }
 ```
