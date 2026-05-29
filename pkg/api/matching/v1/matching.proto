@@ -3,8 +3,9 @@ syntax = "proto3";
 package matching.v1;
 
 import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
 
-option go_package = "matching-service/api/matching/v1;v1";
+option go_package = "matching-service/pkg/api/matching/v1;v1";
 
 // MatchingService 是撮合服务的 gRPC 接口。
 service MatchingService {
@@ -29,15 +30,15 @@ service MatchingService {
 // CreateBasketRequest 是创建出金撮合篮子的请求。
 message CreateBasketRequest {
   // basket_no 是撮合篮子编号。
-  string basket_no = 1;
+  string basket_no = 1 [(validate.rules).string.min_len = 1];
   // withdraw_no 是出金单号。
-  string withdraw_no = 2;
+  string withdraw_no = 2 [(validate.rules).string.min_len = 1];
   // channel 是支付渠道。
-  string channel = 3;
+  string channel = 3 [(validate.rules).string.min_len = 1];
   // currency 是币种。
-  string currency = 4;
+  string currency = 4 [(validate.rules).string.min_len = 1];
   // target_amount 是出金目标金额，使用最小货币单位。
-  int64 target_amount = 5;
+  int64 target_amount = 5 [(validate.rules).int64.gt = 0];
   // expire_at 是篮子过期时间。
   google.protobuf.Timestamp expire_at = 7;
   reserved 6;
@@ -52,13 +53,13 @@ message CreateBasketReply {
 // SubmitDepositRequest 是提交入金单的请求。
 message SubmitDepositRequest {
   // deposit_no 是入金单号。
-  string deposit_no = 1;
+  string deposit_no = 1 [(validate.rules).string.min_len = 1];
   // channel 是支付渠道。
-  string channel = 2;
+  string channel = 2 [(validate.rules).string.min_len = 1];
   // currency 是币种。
-  string currency = 3;
+  string currency = 3 [(validate.rules).string.min_len = 1];
   // amount 是入金金额，使用最小货币单位。
-  int64 amount = 4;
+  int64 amount = 4 [(validate.rules).int64.gt = 0];
   // expire_at 是入金单过期时间。
   google.protobuf.Timestamp expire_at = 5;
 }
@@ -90,7 +91,7 @@ message ExpireTimeoutsReply {
 // GetDepositRequest 是查询入金单的请求。
 message GetDepositRequest {
   // deposit_no 是入金单号。
-  string deposit_no = 1;
+  string deposit_no = 1 [(validate.rules).string.min_len = 1];
 }
 
 // GetDepositReply 是查询入金单的响应。
@@ -102,7 +103,7 @@ message GetDepositReply {
 // GetBasketRequest 是查询出金篮子的请求。
 message GetBasketRequest {
   // basket_no 是撮合篮子编号。
-  string basket_no = 1;
+  string basket_no = 1 [(validate.rules).string.min_len = 1];
 }
 
 // GetBasketReply 是查询出金篮子的响应。

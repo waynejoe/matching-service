@@ -1,12 +1,7 @@
 package server
 
 import (
-	"context"
-	"errors"
-	"log"
-	"net/http"
-	"time"
-
+	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
@@ -14,45 +9,19 @@ import (
 	"matching-service/internal/conf"
 )
 
-// MetricsServer 是 Prometheus 指标服务。
-type MetricsServer struct {
-	addr   string       // addr 是指标监听地址
-	server *http.Server // server 是 HTTP 服务实例
-}
-
-// NewMetricsServer 创建 Prometheus 指标服务。
-func NewMetricsServer(cfg *conf.Bootstrap, metrics *biz.Metrics) *MetricsServer {
+// NewMetricsServer 创建 Prometheus 指标 HTTP 服务。
+func NewMetricsServer(c *conf.Server, metrics *biz.Metrics) *http.Server {
+	var opts []http.ServerOption
+	if c.Metrics.Addr != "" {
+		opts = append(opts, http.Address(c.Metrics.Addr))
+	}
+	srv := http.NewServer(opts...)
 	registry := prometheus.NewRegistry()
 	registry.MustRegister(prometheus.NewGoCollector())
 	registry.MustRegister(prometheus.NewProcessCollector(prometheus.ProcessCollectorOpts{}))
 	registerMatchingCounters(registry, metrics)
-	mux := http.NewServeMux()
-	mux.Handle("/metrics", promhttp.HandlerFor(registry, promhttp.HandlerOpts{}))
-	return &MetricsServer{
-		addr: cfg.Server.Metrics.Addr,
-		server: &http.Server{
-			Addr:              cfg.Server.Metrics.Addr,
-			Handler:           mux,
-			ReadHeaderTimeout: 5 * time.Second,
-		},
-	}
-}
-
-// Run 启动 Prometheus 指标服务。
-func (s *MetricsServer) Run(ctx context.Context) error {
-	go func() {
-		<-ctx.Done()
-		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-		if err := s.server.Shutdown(shutdownCtx); err != nil {
-			log.Printf("Prometheus 指标服务关闭失败: %v", err)
-		}
-	}()
-	log.Printf("Prometheus 指标监听: %s", s.addr)
-	if err := s.server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		return err
-	}
-	return nil
+	srv.Handle("/metrics", promhttp.HandlerFor(registry, promhttp.HandlerOpts{}))
+	return srv
 }
 
 // registerMatchingCounters 注册撮合服务指标。

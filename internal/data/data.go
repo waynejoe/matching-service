@@ -19,18 +19,42 @@ type Data struct {
 }
 
 // NewData 根据配置创建数据层实例。
-func NewData(cfg *conf.Bootstrap) (*Data, error) {
-	db, err := gorm.Open(mysql.Open(cfg.Data.MySQL.Source), &gorm.Config{
+func NewData(cfg *conf.Bootstrap) (*Data, func(), error) {
+	db, err := gorm.Open(mysql.Open(cfg.Data.Mysql.Source), &gorm.Config{
 		TranslateError: true,
 		Logger: logger.New(log.New(os.Stdout, "\r\n", log.LstdFlags), logger.Config{
-			LogLevel:                  logger.Warn,
+			LogLevel:                  gormLogLevel(cfg.Data.GormLogLevel),
 			IgnoreRecordNotFoundError: true,
 		}),
 	})
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return &Data{DB: db}, nil
+	d := &Data{DB: db}
+	cleanup := func() {
+		sqlDB, err := d.sqlDB()
+		if err != nil {
+			return
+		}
+		_ = sqlDB.Close()
+	}
+	return d, cleanup, nil
+}
+
+// gormLogLevel 将配置字符串映射为 GORM 日志级别。
+func gormLogLevel(level string) logger.LogLevel {
+	switch level {
+	case "silent":
+		return logger.Silent
+	case "error":
+		return logger.Error
+	case "info":
+		return logger.Info
+	case "warn", "":
+		return logger.Warn
+	default:
+		return logger.Warn
+	}
 }
 
 // Close 关闭数据库连接。

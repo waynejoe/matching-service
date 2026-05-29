@@ -11,9 +11,9 @@ import (
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"matching-service/internal/model"
+	v1 "matching-service/pkg/api/matching/v1"
+	"matching-service/pkg/model"
 	"matching-service/internal/service"
-	v1 "matching-service/api/matching/v1"
 )
 
 // TestWorkerMessagesPartialMatchSucceeded 验证 RocketMQ 消息入口可以完成少发成交。
@@ -29,7 +29,7 @@ func TestWorkerMessagesPartialMatchSucceeded(t *testing.T) {
 	expireAt := time.Now().Add(time.Hour)
 	withdrawBody := mustJSON(t, &v1.WithdrawEventMessage{
 		EventId: prefix + "_WE",
-		Topic:   env.cfg.Data.RocketMQ.WithdrawTopic,
+		Topic:   env.cfg.Data.Rocketmq.WithdrawTopic,
 		Data: &v1.WithdrawBasket{
 			BasketNo:     prefix + "_B",
 			WithdrawNo:   prefix + "_W",
@@ -45,7 +45,7 @@ func TestWorkerMessagesPartialMatchSucceeded(t *testing.T) {
 
 	depositBody := mustJSON(t, &v1.DepositEventMessage{
 		EventId: prefix + "_DE",
-		Topic:   env.cfg.Data.RocketMQ.DepositTopic,
+		Topic:   env.cfg.Data.Rocketmq.DepositTopic,
 		Data: &v1.DepositOrder{
 			DepositNo: prefix + "_D",
 			Channel:   "IT_WORKER",
@@ -84,7 +84,7 @@ func TestWorkerMessageFailedThenRetried(t *testing.T) {
 	matchingConsumer := service.NewMatchingConsumer(env.uc, env.m)
 	expiredBody := mustJSON(t, &v1.WithdrawEventMessage{
 		EventId: prefix + "_WE",
-		Topic:   env.cfg.Data.RocketMQ.WithdrawTopic,
+		Topic:   env.cfg.Data.Rocketmq.WithdrawTopic,
 		Data: &v1.WithdrawBasket{
 			BasketNo:     prefix + "_B",
 			WithdrawNo:   prefix + "_W",
@@ -101,7 +101,7 @@ func TestWorkerMessageFailedThenRetried(t *testing.T) {
 
 	validBody := mustJSON(t, &v1.WithdrawEventMessage{
 		EventId: prefix + "_WE",
-		Topic:   env.cfg.Data.RocketMQ.WithdrawTopic,
+		Topic:   env.cfg.Data.Rocketmq.WithdrawTopic,
 		Data: &v1.WithdrawBasket{
 			BasketNo:     prefix + "_B",
 			WithdrawNo:   prefix + "_W",

@@ -3,7 +3,7 @@ package engine
 import (
 	"time"
 
-	"matching-service/internal/model"
+	"matching-service/pkg/model"
 )
 
 // Basket 是撮合引擎使用的内存出金篮子。

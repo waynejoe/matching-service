@@ -6,7 +6,7 @@ import (
 
 	"gorm.io/gorm"
 
-	"matching-service/internal/model"
+	"matching-service/pkg/model"
 )
 
 // EventInboxRepo 负责 RocketMQ 消费幂等记录数据访问。

@@ -2,11 +2,12 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v5.29.3
-// source: api/matching/v1/matching.proto
+// source: pkg/api/matching/v1/matching.proto
 
 package v1
 
 import (
+	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -43,7 +44,7 @@ type CreateBasketRequest struct {
 
 func (x *CreateBasketRequest) Reset() {
 	*x = CreateBasketRequest{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[0]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -55,7 +56,7 @@ func (x *CreateBasketRequest) String() string {
 func (*CreateBasketRequest) ProtoMessage() {}
 
 func (x *CreateBasketRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[0]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -68,7 +69,7 @@ func (x *CreateBasketRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBasketRequest.ProtoReflect.Descriptor instead.
 func (*CreateBasketRequest) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{0}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *CreateBasketRequest) GetBasketNo() string {
@@ -124,7 +125,7 @@ type CreateBasketReply struct {
 
 func (x *CreateBasketReply) Reset() {
 	*x = CreateBasketReply{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[1]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -136,7 +137,7 @@ func (x *CreateBasketReply) String() string {
 func (*CreateBasketReply) ProtoMessage() {}
 
 func (x *CreateBasketReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[1]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -149,7 +150,7 @@ func (x *CreateBasketReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBasketReply.ProtoReflect.Descriptor instead.
 func (*CreateBasketReply) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{1}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *CreateBasketReply) GetBasketNo() string {
@@ -178,7 +179,7 @@ type SubmitDepositRequest struct {
 
 func (x *SubmitDepositRequest) Reset() {
 	*x = SubmitDepositRequest{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[2]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -190,7 +191,7 @@ func (x *SubmitDepositRequest) String() string {
 func (*SubmitDepositRequest) ProtoMessage() {}
 
 func (x *SubmitDepositRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[2]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -203,7 +204,7 @@ func (x *SubmitDepositRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubmitDepositRequest.ProtoReflect.Descriptor instead.
 func (*SubmitDepositRequest) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{2}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *SubmitDepositRequest) GetDepositNo() string {
@@ -252,7 +253,7 @@ type SubmitDepositReply struct {
 
 func (x *SubmitDepositReply) Reset() {
 	*x = SubmitDepositReply{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[3]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -264,7 +265,7 @@ func (x *SubmitDepositReply) String() string {
 func (*SubmitDepositReply) ProtoMessage() {}
 
 func (x *SubmitDepositReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[3]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -277,7 +278,7 @@ func (x *SubmitDepositReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubmitDepositReply.ProtoReflect.Descriptor instead.
 func (*SubmitDepositReply) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{3}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *SubmitDepositReply) GetResult() *MatchResult {
@@ -300,7 +301,7 @@ type ExpireTimeoutsRequest struct {
 
 func (x *ExpireTimeoutsRequest) Reset() {
 	*x = ExpireTimeoutsRequest{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[4]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -312,7 +313,7 @@ func (x *ExpireTimeoutsRequest) String() string {
 func (*ExpireTimeoutsRequest) ProtoMessage() {}
 
 func (x *ExpireTimeoutsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[4]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -325,7 +326,7 @@ func (x *ExpireTimeoutsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExpireTimeoutsRequest.ProtoReflect.Descriptor instead.
 func (*ExpireTimeoutsRequest) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{4}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ExpireTimeoutsRequest) GetNowUnix() int64 {
@@ -357,7 +358,7 @@ type ExpireTimeoutsReply struct {
 
 func (x *ExpireTimeoutsReply) Reset() {
 	*x = ExpireTimeoutsReply{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[5]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -369,7 +370,7 @@ func (x *ExpireTimeoutsReply) String() string {
 func (*ExpireTimeoutsReply) ProtoMessage() {}
 
 func (x *ExpireTimeoutsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[5]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -382,7 +383,7 @@ func (x *ExpireTimeoutsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExpireTimeoutsReply.ProtoReflect.Descriptor instead.
 func (*ExpireTimeoutsReply) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{5}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ExpireTimeoutsReply) GetWaitingDeposits() int32 {
@@ -417,7 +418,7 @@ type GetDepositRequest struct {
 
 func (x *GetDepositRequest) Reset() {
 	*x = GetDepositRequest{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[6]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -429,7 +430,7 @@ func (x *GetDepositRequest) String() string {
 func (*GetDepositRequest) ProtoMessage() {}
 
 func (x *GetDepositRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[6]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -442,7 +443,7 @@ func (x *GetDepositRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDepositRequest.ProtoReflect.Descriptor instead.
 func (*GetDepositRequest) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{6}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetDepositRequest) GetDepositNo() string {
@@ -463,7 +464,7 @@ type GetDepositReply struct {
 
 func (x *GetDepositReply) Reset() {
 	*x = GetDepositReply{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[7]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -475,7 +476,7 @@ func (x *GetDepositReply) String() string {
 func (*GetDepositReply) ProtoMessage() {}
 
 func (x *GetDepositReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[7]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -488,7 +489,7 @@ func (x *GetDepositReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDepositReply.ProtoReflect.Descriptor instead.
 func (*GetDepositReply) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{7}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetDepositReply) GetDeposit() *DepositOrder {
@@ -509,7 +510,7 @@ type GetBasketRequest struct {
 
 func (x *GetBasketRequest) Reset() {
 	*x = GetBasketRequest{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[8]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -521,7 +522,7 @@ func (x *GetBasketRequest) String() string {
 func (*GetBasketRequest) ProtoMessage() {}
 
 func (x *GetBasketRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[8]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -534,7 +535,7 @@ func (x *GetBasketRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBasketRequest.ProtoReflect.Descriptor instead.
 func (*GetBasketRequest) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{8}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *GetBasketRequest) GetBasketNo() string {
@@ -555,7 +556,7 @@ type GetBasketReply struct {
 
 func (x *GetBasketReply) Reset() {
 	*x = GetBasketReply{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[9]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -567,7 +568,7 @@ func (x *GetBasketReply) String() string {
 func (*GetBasketReply) ProtoMessage() {}
 
 func (x *GetBasketReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[9]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -580,7 +581,7 @@ func (x *GetBasketReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBasketReply.ProtoReflect.Descriptor instead.
 func (*GetBasketReply) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{9}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *GetBasketReply) GetBasket() *WithdrawBasket {
@@ -605,7 +606,7 @@ type GetMatchRequest struct {
 
 func (x *GetMatchRequest) Reset() {
 	*x = GetMatchRequest{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[10]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -617,7 +618,7 @@ func (x *GetMatchRequest) String() string {
 func (*GetMatchRequest) ProtoMessage() {}
 
 func (x *GetMatchRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[10]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -630,7 +631,7 @@ func (x *GetMatchRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMatchRequest.ProtoReflect.Descriptor instead.
 func (*GetMatchRequest) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{10}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetMatchRequest) GetMatchNo() string {
@@ -667,7 +668,7 @@ type GetMatchReply struct {
 
 func (x *GetMatchReply) Reset() {
 	*x = GetMatchReply{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[11]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -679,7 +680,7 @@ func (x *GetMatchReply) String() string {
 func (*GetMatchReply) ProtoMessage() {}
 
 func (x *GetMatchReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[11]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -692,7 +693,7 @@ func (x *GetMatchReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMatchReply.ProtoReflect.Descriptor instead.
 func (*GetMatchReply) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{11}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetMatchReply) GetMatch() *MatchRecord {
@@ -718,7 +719,7 @@ type CheckHealthRequest struct {
 
 func (x *CheckHealthRequest) Reset() {
 	*x = CheckHealthRequest{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[12]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -730,7 +731,7 @@ func (x *CheckHealthRequest) String() string {
 func (*CheckHealthRequest) ProtoMessage() {}
 
 func (x *CheckHealthRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[12]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -743,7 +744,7 @@ func (x *CheckHealthRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CheckHealthRequest.ProtoReflect.Descriptor instead.
 func (*CheckHealthRequest) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{12}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{12}
 }
 
 // CheckHealthReply 是健康检查响应。
@@ -759,7 +760,7 @@ type CheckHealthReply struct {
 
 func (x *CheckHealthReply) Reset() {
 	*x = CheckHealthReply{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[13]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -771,7 +772,7 @@ func (x *CheckHealthReply) String() string {
 func (*CheckHealthReply) ProtoMessage() {}
 
 func (x *CheckHealthReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[13]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -784,7 +785,7 @@ func (x *CheckHealthReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CheckHealthReply.ProtoReflect.Descriptor instead.
 func (*CheckHealthReply) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{13}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *CheckHealthReply) GetOk() bool {
@@ -816,7 +817,7 @@ type HealthComponent struct {
 
 func (x *HealthComponent) Reset() {
 	*x = HealthComponent{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[14]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -828,7 +829,7 @@ func (x *HealthComponent) String() string {
 func (*HealthComponent) ProtoMessage() {}
 
 func (x *HealthComponent) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[14]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -841,7 +842,7 @@ func (x *HealthComponent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HealthComponent.ProtoReflect.Descriptor instead.
 func (*HealthComponent) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{14}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *HealthComponent) GetName() string {
@@ -874,7 +875,7 @@ type GetMetricsRequest struct {
 
 func (x *GetMetricsRequest) Reset() {
 	*x = GetMetricsRequest{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[15]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -886,7 +887,7 @@ func (x *GetMetricsRequest) String() string {
 func (*GetMetricsRequest) ProtoMessage() {}
 
 func (x *GetMetricsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[15]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -899,7 +900,7 @@ func (x *GetMetricsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMetricsRequest.ProtoReflect.Descriptor instead.
 func (*GetMetricsRequest) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{15}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{15}
 }
 
 // GetMetricsReply 是指标查询响应。
@@ -933,7 +934,7 @@ type GetMetricsReply struct {
 
 func (x *GetMetricsReply) Reset() {
 	*x = GetMetricsReply{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[16]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -945,7 +946,7 @@ func (x *GetMetricsReply) String() string {
 func (*GetMetricsReply) ProtoMessage() {}
 
 func (x *GetMetricsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[16]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -958,7 +959,7 @@ func (x *GetMetricsReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMetricsReply.ProtoReflect.Descriptor instead.
 func (*GetMetricsReply) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{16}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetMetricsReply) GetDepositConsumeSuccess() int64 {
@@ -1071,7 +1072,7 @@ type MatchResult struct {
 
 func (x *MatchResult) Reset() {
 	*x = MatchResult{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[17]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1083,7 +1084,7 @@ func (x *MatchResult) String() string {
 func (*MatchResult) ProtoMessage() {}
 
 func (x *MatchResult) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[17]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1096,7 +1097,7 @@ func (x *MatchResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MatchResult.ProtoReflect.Descriptor instead.
 func (*MatchResult) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{17}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *MatchResult) GetMatched() bool {
@@ -1214,7 +1215,7 @@ type DepositOrder struct {
 
 func (x *DepositOrder) Reset() {
 	*x = DepositOrder{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[18]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1226,7 +1227,7 @@ func (x *DepositOrder) String() string {
 func (*DepositOrder) ProtoMessage() {}
 
 func (x *DepositOrder) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[18]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1239,7 +1240,7 @@ func (x *DepositOrder) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DepositOrder.ProtoReflect.Descriptor instead.
 func (*DepositOrder) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{18}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *DepositOrder) GetDepositNo() string {
@@ -1352,7 +1353,7 @@ type WithdrawBasket struct {
 
 func (x *WithdrawBasket) Reset() {
 	*x = WithdrawBasket{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[19]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1364,7 +1365,7 @@ func (x *WithdrawBasket) String() string {
 func (*WithdrawBasket) ProtoMessage() {}
 
 func (x *WithdrawBasket) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[19]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1377,7 +1378,7 @@ func (x *WithdrawBasket) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WithdrawBasket.ProtoReflect.Descriptor instead.
 func (*WithdrawBasket) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{19}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *WithdrawBasket) GetBasketNo() string {
@@ -1495,7 +1496,7 @@ type MatchRecord struct {
 
 func (x *MatchRecord) Reset() {
 	*x = MatchRecord{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[20]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1507,7 +1508,7 @@ func (x *MatchRecord) String() string {
 func (*MatchRecord) ProtoMessage() {}
 
 func (x *MatchRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[20]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1520,7 +1521,7 @@ func (x *MatchRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MatchRecord.ProtoReflect.Descriptor instead.
 func (*MatchRecord) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{20}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *MatchRecord) GetMatchNo() string {
@@ -1615,7 +1616,7 @@ type DepositEventMessage struct {
 
 func (x *DepositEventMessage) Reset() {
 	*x = DepositEventMessage{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[21]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1627,7 +1628,7 @@ func (x *DepositEventMessage) String() string {
 func (*DepositEventMessage) ProtoMessage() {}
 
 func (x *DepositEventMessage) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[21]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1640,7 +1641,7 @@ func (x *DepositEventMessage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DepositEventMessage.ProtoReflect.Descriptor instead.
 func (*DepositEventMessage) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{21}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *DepositEventMessage) GetEventId() string {
@@ -1679,7 +1680,7 @@ type WithdrawEventMessage struct {
 
 func (x *WithdrawEventMessage) Reset() {
 	*x = WithdrawEventMessage{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[22]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1691,7 +1692,7 @@ func (x *WithdrawEventMessage) String() string {
 func (*WithdrawEventMessage) ProtoMessage() {}
 
 func (x *WithdrawEventMessage) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[22]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1704,7 +1705,7 @@ func (x *WithdrawEventMessage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WithdrawEventMessage.ProtoReflect.Descriptor instead.
 func (*WithdrawEventMessage) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{22}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *WithdrawEventMessage) GetEventId() string {
@@ -1747,7 +1748,7 @@ type MatchRecordDeposit struct {
 
 func (x *MatchRecordDeposit) Reset() {
 	*x = MatchRecordDeposit{}
-	mi := &file_api_matching_v1_matching_proto_msgTypes[23]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1759,7 +1760,7 @@ func (x *MatchRecordDeposit) String() string {
 func (*MatchRecordDeposit) ProtoMessage() {}
 
 func (x *MatchRecordDeposit) ProtoReflect() protoreflect.Message {
-	mi := &file_api_matching_v1_matching_proto_msgTypes[23]
+	mi := &file_pkg_api_matching_v1_matching_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1772,7 +1773,7 @@ func (x *MatchRecordDeposit) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MatchRecordDeposit.ProtoReflect.Descriptor instead.
 func (*MatchRecordDeposit) Descriptor() ([]byte, []int) {
-	return file_api_matching_v1_matching_proto_rawDescGZIP(), []int{23}
+	return file_pkg_api_matching_v1_matching_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *MatchRecordDeposit) GetMatchNo() string {
@@ -1810,27 +1811,27 @@ func (x *MatchRecordDeposit) GetCreatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-var File_api_matching_v1_matching_proto protoreflect.FileDescriptor
+var File_pkg_api_matching_v1_matching_proto protoreflect.FileDescriptor
 
-const file_api_matching_v1_matching_proto_rawDesc = "" +
+const file_pkg_api_matching_v1_matching_proto_rawDesc = "" +
 	"\n" +
-	"\x1eapi/matching/v1/matching.proto\x12\vmatching.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xed\x01\n" +
-	"\x13CreateBasketRequest\x12\x1b\n" +
-	"\tbasket_no\x18\x01 \x01(\tR\bbasketNo\x12\x1f\n" +
-	"\vwithdraw_no\x18\x02 \x01(\tR\n" +
-	"withdrawNo\x12\x18\n" +
-	"\achannel\x18\x03 \x01(\tR\achannel\x12\x1a\n" +
-	"\bcurrency\x18\x04 \x01(\tR\bcurrency\x12#\n" +
-	"\rtarget_amount\x18\x05 \x01(\x03R\ftargetAmount\x127\n" +
+	"\"pkg/api/matching/v1/matching.proto\x12\vmatching.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\x9a\x02\n" +
+	"\x13CreateBasketRequest\x12$\n" +
+	"\tbasket_no\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\bbasketNo\x12(\n" +
+	"\vwithdraw_no\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\n" +
+	"withdrawNo\x12!\n" +
+	"\achannel\x18\x03 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\achannel\x12#\n" +
+	"\bcurrency\x18\x04 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\bcurrency\x12,\n" +
+	"\rtarget_amount\x18\x05 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\ftargetAmount\x127\n" +
 	"\texpire_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\bexpireAtJ\x04\b\x06\x10\a\"0\n" +
 	"\x11CreateBasketReply\x12\x1b\n" +
-	"\tbasket_no\x18\x01 \x01(\tR\bbasketNo\"\xbc\x01\n" +
-	"\x14SubmitDepositRequest\x12\x1d\n" +
+	"\tbasket_no\x18\x01 \x01(\tR\bbasketNo\"\xe0\x01\n" +
+	"\x14SubmitDepositRequest\x12&\n" +
 	"\n" +
-	"deposit_no\x18\x01 \x01(\tR\tdepositNo\x12\x18\n" +
-	"\achannel\x18\x02 \x01(\tR\achannel\x12\x1a\n" +
-	"\bcurrency\x18\x03 \x01(\tR\bcurrency\x12\x16\n" +
-	"\x06amount\x18\x04 \x01(\x03R\x06amount\x127\n" +
+	"deposit_no\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\tdepositNo\x12!\n" +
+	"\achannel\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\achannel\x12#\n" +
+	"\bcurrency\x18\x03 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\bcurrency\x12\x1f\n" +
+	"\x06amount\x18\x04 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x06amount\x127\n" +
 	"\texpire_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\bexpireAt\"F\n" +
 	"\x12SubmitDepositReply\x120\n" +
 	"\x06result\x18\x01 \x01(\v2\x18.matching.v1.MatchResultR\x06result\"H\n" +
@@ -1840,14 +1841,14 @@ const file_api_matching_v1_matching_proto_rawDesc = "" +
 	"\x13ExpireTimeoutsReply\x12)\n" +
 	"\x10waiting_deposits\x18\x01 \x01(\x05R\x0fwaitingDeposits\x12'\n" +
 	"\x0flocked_deposits\x18\x02 \x01(\x05R\x0elockedDeposits\x12\x18\n" +
-	"\abaskets\x18\x03 \x01(\x05R\abaskets\"2\n" +
-	"\x11GetDepositRequest\x12\x1d\n" +
+	"\abaskets\x18\x03 \x01(\x05R\abaskets\";\n" +
+	"\x11GetDepositRequest\x12&\n" +
 	"\n" +
-	"deposit_no\x18\x01 \x01(\tR\tdepositNo\"F\n" +
+	"deposit_no\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\tdepositNo\"F\n" +
 	"\x0fGetDepositReply\x123\n" +
-	"\adeposit\x18\x01 \x01(\v2\x19.matching.v1.DepositOrderR\adeposit\"/\n" +
-	"\x10GetBasketRequest\x12\x1b\n" +
-	"\tbasket_no\x18\x01 \x01(\tR\bbasketNo\"E\n" +
+	"\adeposit\x18\x01 \x01(\v2\x19.matching.v1.DepositOrderR\adeposit\"8\n" +
+	"\x10GetBasketRequest\x12$\n" +
+	"\tbasket_no\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\bbasketNo\"E\n" +
 	"\x0eGetBasketReply\x123\n" +
 	"\x06basket\x18\x01 \x01(\v2\x1b.matching.v1.WithdrawBasketR\x06basket\"j\n" +
 	"\x0fGetMatchRequest\x12\x19\n" +
@@ -1976,22 +1977,22 @@ const file_api_matching_v1_matching_proto_rawDesc = "" +
 	"\bGetMatch\x12\x1c.matching.v1.GetMatchRequest\x1a\x1a.matching.v1.GetMatchReply\x12M\n" +
 	"\vCheckHealth\x12\x1f.matching.v1.CheckHealthRequest\x1a\x1d.matching.v1.CheckHealthReply\x12J\n" +
 	"\n" +
-	"GetMetrics\x12\x1e.matching.v1.GetMetricsRequest\x1a\x1c.matching.v1.GetMetricsReplyB%Z#matching-service/api/matching/v1;v1b\x06proto3"
+	"GetMetrics\x12\x1e.matching.v1.GetMetricsRequest\x1a\x1c.matching.v1.GetMetricsReplyB)Z'matching-service/pkg/api/matching/v1;v1b\x06proto3"
 
 var (
-	file_api_matching_v1_matching_proto_rawDescOnce sync.Once
-	file_api_matching_v1_matching_proto_rawDescData []byte
+	file_pkg_api_matching_v1_matching_proto_rawDescOnce sync.Once
+	file_pkg_api_matching_v1_matching_proto_rawDescData []byte
 )
 
-func file_api_matching_v1_matching_proto_rawDescGZIP() []byte {
-	file_api_matching_v1_matching_proto_rawDescOnce.Do(func() {
-		file_api_matching_v1_matching_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_api_matching_v1_matching_proto_rawDesc), len(file_api_matching_v1_matching_proto_rawDesc)))
+func file_pkg_api_matching_v1_matching_proto_rawDescGZIP() []byte {
+	file_pkg_api_matching_v1_matching_proto_rawDescOnce.Do(func() {
+		file_pkg_api_matching_v1_matching_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_pkg_api_matching_v1_matching_proto_rawDesc), len(file_pkg_api_matching_v1_matching_proto_rawDesc)))
 	})
-	return file_api_matching_v1_matching_proto_rawDescData
+	return file_pkg_api_matching_v1_matching_proto_rawDescData
 }
 
-var file_api_matching_v1_matching_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
-var file_api_matching_v1_matching_proto_goTypes = []any{
+var file_pkg_api_matching_v1_matching_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
+var file_pkg_api_matching_v1_matching_proto_goTypes = []any{
 	(*CreateBasketRequest)(nil),   // 0: matching.v1.CreateBasketRequest
 	(*CreateBasketReply)(nil),     // 1: matching.v1.CreateBasketReply
 	(*SubmitDepositRequest)(nil),  // 2: matching.v1.SubmitDepositRequest
@@ -2018,7 +2019,7 @@ var file_api_matching_v1_matching_proto_goTypes = []any{
 	(*MatchRecordDeposit)(nil),    // 23: matching.v1.MatchRecordDeposit
 	(*timestamppb.Timestamp)(nil), // 24: google.protobuf.Timestamp
 }
-var file_api_matching_v1_matching_proto_depIdxs = []int32{
+var file_pkg_api_matching_v1_matching_proto_depIdxs = []int32{
 	24, // 0: matching.v1.CreateBasketRequest.expire_at:type_name -> google.protobuf.Timestamp
 	24, // 1: matching.v1.SubmitDepositRequest.expire_at:type_name -> google.protobuf.Timestamp
 	17, // 2: matching.v1.SubmitDepositReply.result:type_name -> matching.v1.MatchResult
@@ -2061,26 +2062,26 @@ var file_api_matching_v1_matching_proto_depIdxs = []int32{
 	0,  // [0:19] is the sub-list for field type_name
 }
 
-func init() { file_api_matching_v1_matching_proto_init() }
-func file_api_matching_v1_matching_proto_init() {
-	if File_api_matching_v1_matching_proto != nil {
+func init() { file_pkg_api_matching_v1_matching_proto_init() }
+func file_pkg_api_matching_v1_matching_proto_init() {
+	if File_pkg_api_matching_v1_matching_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_matching_v1_matching_proto_rawDesc), len(file_api_matching_v1_matching_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_pkg_api_matching_v1_matching_proto_rawDesc), len(file_pkg_api_matching_v1_matching_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   24,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_api_matching_v1_matching_proto_goTypes,
-		DependencyIndexes: file_api_matching_v1_matching_proto_depIdxs,
-		MessageInfos:      file_api_matching_v1_matching_proto_msgTypes,
+		GoTypes:           file_pkg_api_matching_v1_matching_proto_goTypes,
+		DependencyIndexes: file_pkg_api_matching_v1_matching_proto_depIdxs,
+		MessageInfos:      file_pkg_api_matching_v1_matching_proto_msgTypes,
 	}.Build()
-	File_api_matching_v1_matching_proto = out.File
-	file_api_matching_v1_matching_proto_goTypes = nil
-	file_api_matching_v1_matching_proto_depIdxs = nil
+	File_pkg_api_matching_v1_matching_proto = out.File
+	file_pkg_api_matching_v1_matching_proto_goTypes = nil
+	file_pkg_api_matching_v1_matching_proto_depIdxs = nil
 }

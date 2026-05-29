@@ -1,29 +1,96 @@
+# matching-service 启动配置（默认本地开发）
+# 启动：go run ./cmd/matching-service -conf ./configs/config.yaml
+# 结构定义：internal/conf/conf.proto（修改后执行 make config）
+
+# ---------------------------------------------------------------------------
+# server — 对外监听
+# ---------------------------------------------------------------------------
 server:
+  # gRPC 撮合 API（internal/server/grpc.go）
   grpc:
+    # 监听地址。K8s 中一般 :9203，由 Service 暴露
     addr: ":9203"
+    # 可选：network，如 tcp
+    # 可选：timeout，如 10s（protobuf duration）
+
+  # Prometheus 指标 HTTP（internal/server/metrics.go）
   metrics:
+    #  scrape 路径固定为 /metrics，EKS 由 ServiceMonitor 抓取
     addr: ":8203"
+
+# ---------------------------------------------------------------------------
+# data — 存储与消息中间件
+# ---------------------------------------------------------------------------
 data:
+  # GORM 日志级别：silent | error | warn | info
+  gorm_log_level: warn
+
   mysql:
     driver: mysql
+    # DSN。生产请走 Secret/环境变量，勿提交真实密码
     source: "root:123456@tcp(localhost:3306)/syntra_match?parseTime=true&loc=Asia%2FShanghai&charset=utf8mb4&collation=utf8mb4_0900_ai_ci"
+
   redis:
+    # 分片锁（pkg/toolbox/redisx），多实例同一 channel:currency 互斥
     addr: "127.0.0.1:6379"
     password: ""
     db: 0
+
+  # RocketMQ 5.x（pkg/toolbox/mqx）。本地 proxy 常见 8081，与旧版 name_server 9876 不同
   rocketmq:
-    name_servers:
-      - "127.0.0.1:9876"
+    # Proxy / gRPC 端点 host:port
+    endpoint: "127.0.0.1:8081"
+    # 实例命名空间，无则留空
+    namespace: ""
+    access_key: ""
+    access_secret: ""
+    # 入金 / 出金事件 topic（与上游约定一致）
     deposit_topic: "match_deposit"
     withdraw_topic: "match_withdraw"
-    consumer_group: "matching-service"
-    max_reconsume_times: 16
-    suspend_queue_millis: 1000
-    dead_letter_topic_remark: "%DLQ%matching-service"
+    consumer:
+      # 消费组，多副本同组负载均衡
+      group: "matching-service"
+      # 并发 worker；serial=true 时忽略，单线程顺序消费
+      worker_num: 1
+      # true：串行处理，保证同组内顺序语义（撮合建议 true）
+      serial: true
+
+# ---------------------------------------------------------------------------
+# match — 撮合业务参数（internal/biz）
+# ---------------------------------------------------------------------------
 match:
+  # 出金超时少发成交最低比例，万分比：3000 = 30%，最大 10000
   min_complete_rate: 3000
+  # 入金默认 TTL（分钟），已在 conf 定义，业务以消息内 expire_at 为准
   deposit_ttl_min: 30
+  # 启动时从 DB 恢复到内存的活跃篮子数量上限
   basket_limit: 10000
+  # Redis 分片锁持有时间（秒），应大于单次撮合临界区耗时
   shard_lock_ttl_second: 30
+  # 后台过期扫描间隔（秒）（internal/server/worker.go）
   expire_interval_sec: 5
+  # 每次 ExpireTimeouts 最多处理条数
   expire_batch_size: 500
+
+# ---------------------------------------------------------------------------
+# trace — OpenTelemetry 分布式追踪（无 opentelemetry 键名）
+# main → internal/middleware/trace.go；gRPC tracing；mqx 注入 trace
+# EKS：endpoint → ADOT Collector :4317 → AWS X-Ray
+# ---------------------------------------------------------------------------
+trace:
+  # OTLP gRPC host:port，不含 http://。空 = 关闭导出
+  endpoint: ""
+  # OTLP 头 Authentication；ADOT+IRSA 通常留空
+  token: ""
+  # 采样率 0~1。prod 建议 0.05~0.1，dev 可用 1
+  sample_ratio: 1
+
+# ---------------------------------------------------------------------------
+# sentry — 错误与 panic（pkg/toolbox/kratox），与 trace 独立
+# ---------------------------------------------------------------------------
+sentry:
+  # 空 = 不上报。生产填 Sentry 项目 DSN
+  dsn: ""
+  env: "dev"
+  # 可选：日志平台跳转链接，纯 AWS 可留空
+  sls_addr: ""

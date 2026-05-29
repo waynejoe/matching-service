@@ -11,7 +11,7 @@
 - `MatchRecordRepo`：撮合结果访问。
 - `StateLogRepo`：状态流水访问。
 - `EventInboxRepo`：RocketMQ 消费幂等访问。
-- Redis 分布式锁放在 `pkg/lock`，不放在 data 层。
+- Redis 分布式锁放在 `pkg/toolbox/redisx`，不放在 data 层。
 
 ## 边界
 

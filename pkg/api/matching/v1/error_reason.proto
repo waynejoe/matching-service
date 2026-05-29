@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package matching.v1;
+
+import "errors/errors.proto";
+
+option go_package = "matching-service/pkg/api/matching/v1;v1";
+
+// ErrorReason 是撮合服务业务错误码。
+enum ErrorReason {
+  option (errors.default_code) = 500;
+
+  SUCCESS = 0;
+
+  INVALID_PARAMS = 400001 [(errors.code) = 400];
+  DEPOSIT_NOT_FOUND = 400002 [(errors.code) = 404];
+  BASKET_NOT_FOUND = 400003 [(errors.code) = 404];
+  MATCH_NOT_FOUND = 400004 [(errors.code) = 404];
+  DEPOSIT_ALREADY_MATCHED = 400005 [(errors.code) = 409];
+  BASKET_CLOSED = 400006 [(errors.code) = 409];
+  SHARD_LOCK_BUSY = 400007 [(errors.code) = 429];
+  INTERNAL_ERROR = 500001 [(errors.code) = 500];
+}

@@ -3,7 +3,7 @@ package biz
 import (
 	"testing"
 
-	"matching-service/internal/model"
+	"matching-service/pkg/model"
 )
 
 // TestMinCompleteAmount 验证最低成交金额按比例向上取整。

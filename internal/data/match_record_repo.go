@@ -5,7 +5,7 @@ import (
 
 	"gorm.io/gorm"
 
-	"matching-service/internal/model"
+	"matching-service/pkg/model"
 )
 
 // MatchRecordRepo 负责撮合结果数据访问。

@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	v1 "matching-service/api/matching/v1"
+	v1 "matching-service/pkg/api/matching/v1"
 )
 
 // HealthComponent 是单个依赖健康状态。

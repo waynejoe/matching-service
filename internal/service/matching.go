@@ -10,10 +10,10 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"gorm.io/gorm"
 
+	v1 "matching-service/pkg/api/matching/v1"
 	"matching-service/internal/biz"
 	"matching-service/internal/engine"
-	"matching-service/internal/model"
-	v1 "matching-service/api/matching/v1"
+	"matching-service/pkg/model"
 )
 
 // MatchingService 是撮合 gRPC 服务。

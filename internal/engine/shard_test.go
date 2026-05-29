@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"matching-service/internal/model"
+	"matching-service/pkg/model"
 )
 
 // TestMatchDepositCompleteBasket 验证入金可以直接凑满篮子。

@@ -8,47 +8,71 @@ package main
 
 import (
 	"context"
+
+	"github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2/log"
+
 	"matching-service/internal/biz"
 	"matching-service/internal/conf"
 	"matching-service/internal/data"
 	"matching-service/internal/server"
 	"matching-service/internal/service"
-	"matching-service/pkg/lock"
+	"matching-service/pkg/toolbox/redisx"
+)
+
+import (
+	_ "go.uber.org/automaxprocs"
 )
 
 // Injectors from wire.go:
 
-// newApplication 使用 Wire 装配服务依赖。
-func newApplication(ctx context.Context, confPath string) (*application, error) {
-	bootstrap, err := conf.Load(confPath)
+// wireApp 使用 Wire 装配 Kratos 应用。
+func wireApp(bootstrap *conf.Bootstrap, logger log.Logger) (*kratos.App, func(), error) {
+	confServer := bootstrap.Server
+	context := provideContext()
+	dataData, cleanup, err := data.NewData(bootstrap)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	dataData, err := data.NewData(bootstrap)
+	redisLock, cleanup2, err := redisx.NewShardLockProvider(bootstrap)
 	if err != nil {
-		return nil, err
+		cleanup()
+		return nil, nil, err
 	}
-	redisLock := lock.NewRedisLock(bootstrap)
 	metrics := biz.NewMetrics()
-	matchingUsecase, err := biz.NewMatchingUsecase(ctx, bootstrap, dataData, redisLock, metrics)
+	matchingUsecase, err := biz.NewMatchingUsecase(context, bootstrap, dataData, redisLock, metrics)
 	if err != nil {
-		return nil, err
+		cleanup2()
+		cleanup()
+		return nil, nil, err
 	}
-	matchingConsumer := service.NewMatchingConsumer(matchingUsecase, metrics)
-	rocketMQConsumer := server.NewRocketMQConsumer(bootstrap, matchingConsumer)
-	expireWorker := server.NewExpireWorker(bootstrap, matchingUsecase)
 	healthChecker := server.NewHealthChecker(bootstrap, dataData, redisLock)
 	matchingService := service.NewMatchingService(matchingUsecase, healthChecker)
-	grpcServer := server.NewGRPCServer(bootstrap, matchingService)
-	metricsServer := server.NewMetricsServer(bootstrap, metrics)
-	mainApplication := &application{
-		cfg:              bootstrap,
-		data:             dataData,
-		shardLock:        redisLock,
-		rocketMQConsumer: rocketMQConsumer,
-		expireWorker:     expireWorker,
-		grpcServer:       grpcServer,
-		metricsServer:    metricsServer,
+	grpcServer := server.NewGRPCServer(confServer, matchingService, logger)
+	httpServer := server.NewMetricsServer(confServer, metrics)
+	matchingConsumer := service.NewMatchingConsumer(matchingUsecase, metrics)
+	consumerManager, err := server.NewConsumerManager(bootstrap, matchingConsumer, logger)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
 	}
-	return mainApplication, nil
+	producer, err := server.NewMQProducer(bootstrap)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	expireWorker := server.NewExpireWorker(bootstrap, matchingUsecase)
+	app := newApp(logger, grpcServer, httpServer, consumerManager, producer, expireWorker)
+	return app, func() {
+		cleanup2()
+		cleanup()
+	}, nil
+}
+
+// wire.go:
+
+func provideContext() context.Context {
+	return context.Background()
 }

@@ -5,7 +5,7 @@ import (
 	"sort"
 	"sync"
 
-	"matching-service/internal/model"
+	"matching-service/pkg/model"
 )
 
 // CommitFunc 是撮合结果持久化回调。

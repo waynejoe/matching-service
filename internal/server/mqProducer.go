@@ -6,101 +6,126 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/apache/rocketmq-client-go/v2"
-	"github.com/apache/rocketmq-client-go/v2/primitive"
-	"github.com/apache/rocketmq-client-go/v2/producer"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	v1 "matching-service/pkg/api/matching/v1"
 	"matching-service/internal/conf"
-	"matching-service/internal/model"
-	v1 "matching-service/api/matching/v1"
+	"matching-service/pkg/model"
+	"matching-service/pkg/toolbox/mqx"
 )
 
-// RocketMQProducer 负责按分片 key 发送 RocketMQ 消息。
+// RocketMQProducer 负责按 MessageGroup 发送 RocketMQ 5.x 消息。
 type RocketMQProducer struct {
-	cfg      conf.RocketMQ     // cfg 是 RocketMQ 配置
-	producer rocketmq.Producer // producer 是 RocketMQ producer
+	cfg      *conf.RocketMQ
+	producer *mqx.Producer
+	own      bool
 }
 
-// NewRocketMQProducer 创建 RocketMQ 生产者。
-func NewRocketMQProducer(cfg conf.RocketMQ) (*RocketMQProducer, error) {
-	p, err := rocketmq.NewProducer(
-		producer.WithNsResolver(primitive.NewPassthroughResolver(cfg.NameServers)),
-		producer.WithQueueSelector(producer.NewHashQueueSelector()),
-		producer.WithRetry(2),
-	)
+// NewRocketMQProducer 创建 RocketMQ 生产者（独立生命周期，供工具/健康检查使用）。
+func NewRocketMQProducer(cfg *conf.RocketMQ) (*RocketMQProducer, error) {
+	if cfg == nil {
+		return nil, fmt.Errorf("RocketMQ 配置为空")
+	}
+	if cfg.GetEndpoint() == "" {
+		return nil, fmt.Errorf("RocketMQ endpoint 为空")
+	}
+	p, err := mqx.NewProducer(mqConfig(cfg))
 	if err != nil {
 		return nil, err
 	}
-	return &RocketMQProducer{cfg: cfg, producer: p}, nil
+	return &RocketMQProducer{cfg: cfg, producer: p, own: true}, nil
+}
+
+// WrapRocketMQProducer 包装已在 Kratos 中启动的共享生产者。
+func WrapRocketMQProducer(cfg *conf.RocketMQ, p *mqx.Producer) *RocketMQProducer {
+	return &RocketMQProducer{cfg: cfg, producer: p, own: false}
 }
 
 // Start 启动 RocketMQ 生产者。
 func (p *RocketMQProducer) Start() error {
-	return p.producer.Start()
+	return p.producer.Start(context.Background())
 }
 
 // Shutdown 关闭 RocketMQ 生产者。
 func (p *RocketMQProducer) Shutdown() error {
-	return p.producer.Shutdown()
+	if !p.own {
+		return nil
+	}
+	return p.producer.Stop(context.Background())
 }
 
 // SendDeposit 发送入金主队列消息。
 func (p *RocketMQProducer) SendDeposit(ctx context.Context, eventID string, deposit model.DepositOrder, delayLevel int) error {
-	msg, err := p.buildMessage(p.cfg.DepositTopic, eventID, deposit.Channel, deposit.Currency, &v1.DepositEventMessage{
+	payload := &v1.DepositEventMessage{
 		EventId: eventID,
-		Topic:   p.cfg.DepositTopic,
+		Topic:   p.cfg.GetDepositTopic(),
 		Data:    depositToPB(deposit),
-	}, delayLevel)
-	if err != nil {
-		return err
 	}
-	_, err = p.producer.SendSync(ctx, msg)
-	return err
+	return p.sendPayload(ctx, p.cfg.GetDepositTopic(), eventID, deposit.Channel, deposit.Currency, payload, delayLevel)
 }
 
 // SendWithdraw 发送出金主队列消息。
 func (p *RocketMQProducer) SendWithdraw(ctx context.Context, eventID string, basket model.WithdrawBasket, delayLevel int) error {
-	msg, err := p.buildMessage(p.cfg.WithdrawTopic, eventID, basket.Channel, basket.Currency, &v1.WithdrawEventMessage{
+	payload := &v1.WithdrawEventMessage{
 		EventId: eventID,
-		Topic:   p.cfg.WithdrawTopic,
+		Topic:   p.cfg.GetWithdrawTopic(),
 		Data:    basketToPB(basket),
-	}, delayLevel)
-	if err != nil {
-		return err
 	}
-	_, err = p.producer.SendSync(ctx, msg)
-	return err
+	return p.sendPayload(ctx, p.cfg.GetWithdrawTopic(), eventID, basket.Channel, basket.Currency, payload, delayLevel)
 }
 
 // SendRaw 发送已经编码好的 RocketMQ 消息体。
 func (p *RocketMQProducer) SendRaw(ctx context.Context, topic, eventID, channel, currency string, body []byte, delayLevel int) error {
-	msg := primitive.NewMessage(topic, body)
-	msg.WithKeys([]string{eventID})
-	msg.WithShardingKey(fmt.Sprintf("%s:%s", channel, currency))
-	if delayLevel > 0 {
-		msg.WithDelayTimeLevel(delayLevel)
+	msg := mqx.NewMessage(topic, body).
+		WithKey(eventID).
+		WithMessageGroup(shardKey(channel, currency))
+	if d := delayLevelToDuration(delayLevel); d > 0 {
+		msg.WithDelayDuration(d)
 	}
-	_, err := p.producer.SendSync(ctx, msg)
-	return err
+	return p.producer.Send(ctx, msg)
 }
 
-// buildMessage 构造带分片 key 和可选延迟级别的 RocketMQ 消息。
-func (p *RocketMQProducer) buildMessage(topic, eventID, channel, currency string, payload any, delayLevel int) (*primitive.Message, error) {
+func (p *RocketMQProducer) sendPayload(ctx context.Context, topic, eventID, channel, currency string, payload any, delayLevel int) error {
 	body, err := json.Marshal(payload)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	msg := primitive.NewMessage(topic, body)
-	msg.WithKeys([]string{eventID})
-	msg.WithShardingKey(fmt.Sprintf("%s:%s", channel, currency))
-	if delayLevel > 0 {
-		msg.WithDelayTimeLevel(delayLevel)
-	}
-	return msg, nil
+	return p.SendRaw(ctx, topic, eventID, channel, currency, body, delayLevel)
 }
 
-// depositToPB 把 model 入金单转换成 proto 入金单。
+func shardKey(channel, currency string) string {
+	return fmt.Sprintf("%s:%s", channel, currency)
+}
+
+// delayLevelToDuration 将 RocketMQ v2 延迟级别映射为 v5 延迟时长。
+func delayLevelToDuration(level int) time.Duration {
+	table := []time.Duration{
+		0,
+		time.Second,
+		5 * time.Second,
+		10 * time.Second,
+		30 * time.Second,
+		time.Minute,
+		2 * time.Minute,
+		3 * time.Minute,
+		4 * time.Minute,
+		5 * time.Minute,
+		6 * time.Minute,
+		7 * time.Minute,
+		8 * time.Minute,
+		9 * time.Minute,
+		10 * time.Minute,
+		20 * time.Minute,
+		30 * time.Minute,
+		1 * time.Hour,
+		2 * time.Hour,
+	}
+	if level <= 0 || level >= len(table) {
+		return 0
+	}
+	return table[level]
+}
+
 func depositToPB(in model.DepositOrder) *v1.DepositOrder {
 	return &v1.DepositOrder{
 		DepositNo:       in.DepositNo,
@@ -117,7 +142,6 @@ func depositToPB(in model.DepositOrder) *v1.DepositOrder {
 	}
 }
 
-// basketToPB 把 model 出金篮子转换成 proto 出金篮子。
 func basketToPB(in model.WithdrawBasket) *v1.WithdrawBasket {
 	return &v1.WithdrawBasket{
 		BasketNo:      in.BasketNo,
@@ -135,7 +159,6 @@ func basketToPB(in model.WithdrawBasket) *v1.WithdrawBasket {
 	}
 }
 
-// timeToTimestamp 把 Go 时间转换成 protobuf 时间戳。
 func timeToTimestamp(in time.Time) *timestamppb.Timestamp {
 	if in.IsZero() {
 		return nil

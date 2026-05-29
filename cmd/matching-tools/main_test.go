@@ -42,9 +42,14 @@ func TestParseReplayShard(t *testing.T) {
 
 // TestReplayTopic 验证重放 topic 选择规则。
 func TestReplayTopic(t *testing.T) {
-	cfg := &conf.Bootstrap{}
-	cfg.Data.RocketMQ.DepositTopic = "match_deposit"
-	cfg.Data.RocketMQ.WithdrawTopic = "match_withdraw"
+	cfg := &conf.Bootstrap{
+		Data: &conf.Data{
+			Rocketmq: &conf.RocketMQ{
+				DepositTopic:  "match_deposit",
+				WithdrawTopic: "match_withdraw",
+			},
+		},
+	}
 	topic, err := replayTopic(cfg, "deposit", "")
 	if err != nil {
 		t.Fatalf("选择入金 topic 失败: %v", err)

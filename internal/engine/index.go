@@ -3,7 +3,7 @@ package engine
 import (
 	"sort"
 
-	"matching-service/internal/model"
+	"matching-service/pkg/model"
 )
 
 // BasketMap 按篮子单号保存活跃内存篮子。

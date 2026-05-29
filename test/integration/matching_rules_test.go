@@ -12,8 +12,8 @@ import (
 	"matching-service/internal/biz"
 	"matching-service/internal/conf"
 	"matching-service/internal/data"
-	"matching-service/internal/model"
-	"matching-service/pkg/lock"
+	"matching-service/pkg/model"
+	"matching-service/pkg/toolbox/redisx"
 )
 
 // testEnv 保存集成测试共享资源。
@@ -21,7 +21,7 @@ type testEnv struct {
 	cfg  *conf.Bootstrap      // cfg 是测试配置
 	data *data.Data           // data 是数据库资源
 	uc   *biz.MatchingUsecase // uc 是撮合用例
-	lock *lock.RedisLock      // lock 是 Redis 分片锁
+	lock *redisx.Lock         // lock 是 Redis 分片锁
 	m    *biz.Metrics         // m 是运行指标
 }
 
@@ -165,15 +165,16 @@ func TestOverRemainDepositPending(t *testing.T) {
 // newTestEnv 创建集成测试环境。
 func newTestEnv(t *testing.T, ctx context.Context) *testEnv {
 	t.Helper()
-	cfg, err := conf.Load(configPath(t))
+	cfg, err := loadBootstrap(configPath(t))
 	if err != nil {
 		t.Fatalf("读取配置失败: %v", err)
 	}
-	dataLayer, err := data.NewData(cfg)
+	dataLayer, dataCleanup, err := data.NewData(cfg)
 	if err != nil {
 		t.Fatalf("连接数据库失败: %v", err)
 	}
-	shardLock := lock.NewRedisLock(cfg)
+	t.Cleanup(dataCleanup)
+	shardLock := redisx.NewShardLock(cfg)
 	metric := biz.NewMetrics()
 	usecase, err := biz.NewMatchingUsecase(ctx, cfg, dataLayer, shardLock, metric)
 	if err != nil {

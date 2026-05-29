@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
+	v1 "matching-service/pkg/api/matching/v1"
 	"matching-service/internal/biz"
-	v1 "matching-service/api/matching/v1"
 )
 
 // GetMetrics 返回服务运行指标。

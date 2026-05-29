@@ -8,9 +8,13 @@ import (
 	"testing"
 	"time"
 
-	"matching-service/internal/model"
+	"github.com/go-kratos/kratos/v2/log"
+
+	"matching-service/internal/conf"
+	"matching-service/pkg/model"
 	"matching-service/internal/server"
 	"matching-service/internal/service"
+	"matching-service/pkg/toolbox/mqx"
 )
 
 // TestRocketMQE2EPartialMatchSucceeded 验证 RocketMQ 真实收发链路可以完成少发成交。
@@ -22,15 +26,21 @@ func TestRocketMQE2EPartialMatchSucceeded(t *testing.T) {
 	prefix := fmt.Sprintf("IT_RMQ_E2E_%d", time.Now().UnixNano())
 	env.cleanup(t, prefix)
 	defer env.cleanup(t, prefix)
-	env.cfg.Data.RocketMQ.ConsumerGroup = prefix
+	if env.cfg.Data.Rocketmq.Consumer == nil {
+		env.cfg.Data.Rocketmq.Consumer = &conf.Consumer{}
+	}
+	env.cfg.Data.Rocketmq.Consumer.Group = prefix
 
 	matchingConsumer := service.NewMatchingConsumer(env.uc, env.m)
-	consumerRunner := server.NewRocketMQConsumer(env.cfg, matchingConsumer)
+	consumerMgr, err := server.NewConsumerManager(env.cfg, matchingConsumer, log.DefaultLogger)
+	if err != nil {
+		t.Fatalf("创建 RocketMQ consumer 失败: %v", err)
+	}
 	consumerCtx, stopConsumer := context.WithCancel(ctx)
-	consumerErr := startRocketMQConsumer(t, consumerCtx, consumerRunner)
-	defer stopRocketMQConsumer(t, stopConsumer, consumerErr)
+	consumerErr := startMQConsumerManager(t, consumerCtx, consumerMgr)
+	defer stopMQConsumerManager(t, stopConsumer, consumerErr)
 
-	producer, err := server.NewRocketMQProducer(env.cfg.Data.RocketMQ)
+	producer, err := server.NewRocketMQProducer(env.cfg.Data.Rocketmq)
 	if err != nil {
 		t.Fatalf("创建 RocketMQ producer 失败: %v", err)
 	}
@@ -98,23 +108,21 @@ func TestRocketMQE2EPartialMatchSucceeded(t *testing.T) {
 	assertEventStatus(t, env, depositNo, model.EventStatusSucceeded)
 }
 
-// startRocketMQConsumer 启动 RocketMQ consumer 并返回异常通道。
-func startRocketMQConsumer(t *testing.T, ctx context.Context, consumer *server.RocketMQConsumer) <-chan error {
+func startMQConsumerManager(t *testing.T, ctx context.Context, mgr *mqx.ConsumerManager) <-chan error {
 	t.Helper()
 	errCh := make(chan error, 1)
 	go func() {
-		errCh <- consumer.Run(ctx)
+		errCh <- mgr.Start(ctx)
 	}()
 	select {
 	case err := <-errCh:
 		t.Fatalf("启动 RocketMQ consumer 失败: %v", err)
-	case <-time.After(2 * time.Second):
+	case <-time.After(3 * time.Second):
 	}
 	return errCh
 }
 
-// stopRocketMQConsumer 停止 RocketMQ consumer。
-func stopRocketMQConsumer(t *testing.T, cancel context.CancelFunc, errCh <-chan error) {
+func stopMQConsumerManager(t *testing.T, cancel context.CancelFunc, errCh <-chan error) {
 	t.Helper()
 	cancel()
 	select {
@@ -122,7 +130,7 @@ func stopRocketMQConsumer(t *testing.T, cancel context.CancelFunc, errCh <-chan 
 		if err != nil {
 			t.Fatalf("关闭 RocketMQ consumer 失败: %v", err)
 		}
-	case <-time.After(5 * time.Second):
+	case <-time.After(10 * time.Second):
 		t.Fatalf("关闭 RocketMQ consumer 超时")
 	}
 }

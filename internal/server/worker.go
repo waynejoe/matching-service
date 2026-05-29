@@ -21,12 +21,12 @@ func NewExpireWorker(cfg *conf.Bootstrap, uc *biz.MatchingUsecase) *ExpireWorker
 	return &ExpireWorker{
 		uc:       uc,
 		interval: time.Duration(cfg.Match.ExpireIntervalSec) * time.Second,
-		limit:    cfg.Match.ExpireBatchSize,
+		limit:    int(cfg.Match.ExpireBatchSize),
 	}
 }
 
-// Run 启动超时扫描循环。
-func (w *ExpireWorker) Run(ctx context.Context) {
+// Start 启动超时扫描循环，直到上下文取消。
+func (w *ExpireWorker) Start(ctx context.Context) error {
 	if w.interval <= 0 {
 		w.interval = 5 * time.Second
 	}
@@ -39,11 +39,17 @@ func (w *ExpireWorker) Run(ctx context.Context) {
 	for {
 		select {
 		case <-ctx.Done():
-			return
+			return nil
 		case <-ticker.C:
 			w.scan(ctx)
 		}
 	}
+}
+
+// Stop 停止超时扫描 worker。
+func (w *ExpireWorker) Stop(ctx context.Context) error {
+	_ = ctx
+	return nil
 }
 
 // scan 执行一轮超时扫描。

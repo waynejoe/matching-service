@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 
+	v1 "matching-service/pkg/api/matching/v1"
 	"matching-service/internal/biz"
-	"matching-service/internal/model"
-	v1 "matching-service/api/matching/v1"
+	"matching-service/pkg/model"
 )
 
 // MatchingConsumer 是 RocketMQ 消息处理入口。

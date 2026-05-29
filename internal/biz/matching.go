@@ -11,9 +11,9 @@ import (
 	"matching-service/internal/conf"
 	"matching-service/internal/data"
 	"matching-service/internal/engine"
-	"matching-service/internal/model"
-	"matching-service/pkg/idgen"
-	"matching-service/pkg/lock"
+	"matching-service/pkg/model"
+	"matching-service/pkg/toolbox/idx"
+	"matching-service/pkg/toolbox/redisx"
 )
 
 var errBasketChanged = errors.New("篮子状态已变化")
@@ -49,7 +49,7 @@ type ShardLocker interface {
 }
 
 // NewMatchingUsecase 根据配置创建撮合用例并恢复活跃篮子。
-func NewMatchingUsecase(ctx context.Context, cfg *conf.Bootstrap, d *data.Data, shardLock *lock.RedisLock, metric *Metrics) (*MatchingUsecase, error) {
+func NewMatchingUsecase(ctx context.Context, cfg *conf.Bootstrap, d *data.Data, shardLock *redisx.Lock, metric *Metrics) (*MatchingUsecase, error) {
 	uc := &MatchingUsecase{
 		data:      d,
 		eventRepo: data.NewEventInboxRepo(d),
@@ -57,9 +57,9 @@ func NewMatchingUsecase(ctx context.Context, cfg *conf.Bootstrap, d *data.Data, 
 		metrics:   metric,
 		shards:    make(map[string]*engine.Shard),
 	}
-	uc.SetShardLocker(shardLock, time.Duration(cfg.Match.ShardLockTTLSecond)*time.Second)
+	uc.SetShardLocker(shardLock, time.Duration(cfg.Match.ShardLockTtlSecond)*time.Second)
 	uc.minCompleteRate = cfg.Match.MinCompleteRate
-	if err := uc.RecoverActiveBaskets(ctx, cfg.Match.BasketLimit); err != nil {
+	if err := uc.RecoverActiveBaskets(ctx, int(cfg.Match.BasketLimit)); err != nil {
 		return nil, err
 	}
 	return uc, nil
@@ -87,7 +87,7 @@ func (uc *MatchingUsecase) CreateBasket(ctx context.Context, basket *model.Withd
 // createBasketLocked 在分片锁内创建出金篮子。
 func (uc *MatchingUsecase) createBasketLocked(ctx context.Context, basket *model.WithdrawBasket) error {
 	if basket.BasketNo == "" {
-		basket.BasketNo = idgen.New("B")
+		basket.BasketNo = idx.New("B")
 	}
 	if basket.Status == 0 {
 		basket.Status = model.StatusWaiting
@@ -595,7 +595,7 @@ func (uc *MatchingUsecase) persistAttachedDeposit(ctx context.Context, tx *gorm.
 
 // persistCompletedMatch 持久化已经凑满的撮合结果。
 func (uc *MatchingUsecase) persistCompletedMatch(ctx context.Context, tx *gorm.DB, result engine.MatchResult) error {
-	matchNo := idgen.New("M")
+	matchNo := idx.New("M")
 	if err := tx.WithContext(ctx).Create(&model.MatchRecord{
 		MatchNo:       matchNo,
 		BasketNo:      result.BasketNo,
@@ -772,7 +772,7 @@ func ptrStatus(status int32) *int32 {
 // normalizeDeposit 填充入金单默认值。
 func normalizeDeposit(deposit *model.DepositOrder) {
 	if deposit.DepositNo == "" {
-		deposit.DepositNo = idgen.New("D")
+		deposit.DepositNo = idx.New("D")
 	}
 	if deposit.ExpireAt.IsZero() {
 		deposit.ExpireAt = time.Now().Add(30 * time.Minute)

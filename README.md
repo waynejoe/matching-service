@@ -6,9 +6,6 @@
 
 ```text
 matching-service/
-├── api/
-│   └── matching/
-│       └── v1/                 # proto 定义及生成代码
 ├── cmd/
 │   └── matching-service/       # 服务启动入口
 ├── configs/                    # 配置文件
@@ -17,12 +14,14 @@ matching-service/
 │   ├── conf/                   # 配置结构
 │   ├── data/                   # MySQL 表级访问层
 │   ├── engine/                 # 撮合引擎核心逻辑
-│   ├── model/                  # GORM 数据模型
 │   ├── server/                 # gRPC、RocketMQ、Prometheus、后台任务等运行入口
 │   └── service/                # gRPC 接口实现、MQ 消息处理
 ├── pkg/
-│   ├── idgen/                  # 可复用 ID 生成工具
-│   └── lock/                   # 可复用 Redis 分布式锁
+│   ├── api/
+│   │   └── matching/
+│   │       └── v1/             # proto 定义及生成代码（其它服务可 import pb）
+│   ├── model/                  # 撮合域 GORM 模型（多服务共用）
+│   └── toolbox/                # 可复用工具库（见 pkg/toolbox/README.md）
 ├── scripts/
 │   ├── mysql/                  # MySQL 初始化和变更脚本
 │   └── rocketmq/               # RocketMQ 本地管理脚本
@@ -37,7 +36,13 @@ matching-service/
 proto 文件：
 
 ```text
-api/matching/v1/matching.proto
+pkg/api/matching/v1/matching.proto
+```
+
+其它服务引用生成代码：
+
+```go
+import v1 "matching-service/pkg/api/matching/v1"
 ```
 
 当前接口：
@@ -159,7 +164,7 @@ make rocketmq-replay KIND=withdraw BODY_FILE=/tmp/withdraw-dlq.json
 
 ## RocketMQ 消息格式
 
-消息 envelope 和 data 统一由 proto 定义（`api/matching/v1/matching.proto`），JSON 序列化使用 proto3 标准的 snake_case 字段名。
+消息 envelope 和 data 统一由 proto 定义（`pkg/api/matching/v1/matching.proto`），JSON 序列化使用 proto3 标准的 snake_case 字段名。
 
 入金 topic：
 

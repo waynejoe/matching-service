@@ -5,7 +5,7 @@ import (
 
 	"gorm.io/gorm"
 
-	"matching-service/internal/model"
+	"matching-service/pkg/model"
 )
 
 // DepositRepo 负责入金单数据访问。

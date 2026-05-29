@@ -3,7 +3,7 @@ package engine
 import (
 	"time"
 
-	"matching-service/internal/model"
+	"matching-service/pkg/model"
 )
 
 // Deposit 是撮合引擎使用的内存入金单。

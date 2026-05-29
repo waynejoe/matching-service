@@ -1,0 +1,118 @@
+syntax = "proto3";
+
+package matching.conf;
+
+option go_package = "matching-service/internal/conf;conf";
+
+import "google/protobuf/duration.proto";
+
+// Bootstrap 是服务启动配置根节点，对应 configs/config.yaml。
+message Bootstrap {
+  Server server = 1;
+  Data data = 2;
+  Match match = 3;
+  Trace trace = 4;
+  Sentry sentry = 5;
+}
+
+// Server 是对外服务监听配置。
+message Server {
+  GRPC grpc = 1;
+  Metrics metrics = 2;
+}
+
+// GRPC 是撮合 gRPC API 监听配置。
+message GRPC {
+  // 传输层协议，如 tcp；空则使用 Kratos 默认。
+  string network = 1;
+  // 监听地址，如 :9203。
+  string addr = 2;
+  // 请求超时；空则不限。
+  google.protobuf.Duration timeout = 3;
+}
+
+// Metrics 是 Prometheus 指标 HTTP 配置。
+message Metrics {
+  // 监听地址，路径固定 /metrics。
+  string addr = 1;
+}
+
+// Data 是 MySQL、Redis、RocketMQ 与 ORM 日志配置。
+message Data {
+  MySQL mysql = 1;
+  Redis redis = 2;
+  RocketMQ rocketmq = 3;
+  // GORM 日志：silent | error | warn | info。
+  string gorm_log_level = 4;
+}
+
+// MySQL 连接配置。
+message MySQL {
+  string driver = 1;
+  // 完整 DSN，如 user:pass@tcp(host:3306)/db?parseTime=true。
+  string source = 2;
+}
+
+// Redis 连接配置，用于分片分布式锁。
+message Redis {
+  string addr = 1;
+  string password = 2;
+  int32 db = 3;
+}
+
+// RocketMQ 5.x 配置（非旧版 name_server）。
+message RocketMQ {
+  // Proxy/gRPC 端点 host:port。
+  string endpoint = 1;
+  string namespace = 2;
+  string access_key = 3;
+  string access_secret = 4;
+  string deposit_topic = 5;
+  string withdraw_topic = 6;
+  Consumer consumer = 7;
+}
+
+// RocketMQ 消费者配置。
+message Consumer {
+  string group = 1;
+  // 并发数；serial=true 时不使用线程池。
+  int32 worker_num = 2;
+  // true 时串行消费，保证顺序语义。
+  bool serial = 3;
+}
+
+// Match 是撮合引擎与后台任务参数。
+message Match {
+  // 少发成交最低比例，万分比（3000=30%）。
+  int64 min_complete_rate = 1;
+  // 入金默认 TTL（分钟），预留；实际以消息 expire_at 为准。
+  int32 deposit_ttl_min = 2;
+  // 启动恢复活跃篮子上限。
+  int32 basket_limit = 3;
+  // Redis 分片锁 TTL（秒）。
+  int32 shard_lock_ttl_second = 4;
+  // 过期扫描周期（秒）。
+  int32 expire_interval_sec = 5;
+  // 单次过期处理批量上限。
+  int32 expire_batch_size = 6;
+}
+
+// Trace 是 OpenTelemetry 追踪导出（YAML 键 trace，无 opentelemetry 段）。
+message Trace {
+  // OTLP gRPC 地址（host:port）；空则不注册 TracerProvider。
+  string endpoint = 1;
+  // OTLP 认证头 Authentication；ADOT/IRSA 通常为空。
+  string token = 2;
+  // 采样比例 0~1。
+  float sample_ratio = 3;
+}
+
+// Sentry 错误与 panic 上报，与 Trace 独立。
+message Sentry {
+  // 项目 DSN；空则不上报。
+  string dsn = 1;
+  // 环境标签，如 dev / staging / prod。
+  string env = 2;
+  // 可选日志平台链接，纯 AWS 可留空。
+  string sls_addr = 3;
+}

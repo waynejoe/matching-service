@@ -5,7 +5,7 @@ import (
 
 	"gorm.io/gorm"
 
-	"matching-service/internal/model"
+	"matching-service/pkg/model"
 )
 
 // BasketDepositRepo 负责篮子入金明细数据访问。

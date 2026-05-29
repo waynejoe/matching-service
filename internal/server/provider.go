@@ -11,7 +11,7 @@ var ProviderSet = wire.NewSet(
 	NewGRPCServer,
 	NewHealthChecker,
 	NewMetricsServer,
-	NewRocketMQConsumer,
-	NewExpireWorker,
+	NewConsumerManager,
+	NewMQProducer,
 	wire.Bind(new(service.HealthChecker), new(*HealthChecker)),
 )

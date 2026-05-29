@@ -60,7 +60,7 @@ func runReplay(args []string) error {
 	if *bodyFile == "" {
 		return fmt.Errorf("body-file 不能为空")
 	}
-	cfg, err := conf.Load(*confPath)
+	cfg, err := loadBootstrap(*confPath)
 	if err != nil {
 		return err
 	}
@@ -76,7 +76,7 @@ func runReplay(args []string) error {
 	if err != nil {
 		return err
 	}
-	producer, err := server.NewRocketMQProducer(cfg.Data.RocketMQ)
+	producer, err := server.NewRocketMQProducer(cfg.Data.Rocketmq)
 	if err != nil {
 		return err
 	}
@@ -134,9 +134,9 @@ func parseReplayShard(data json.RawMessage) (string, string, error) {
 func replayTopic(cfg *conf.Bootstrap, kind, fallback string) (string, error) {
 	switch kind {
 	case "deposit":
-		return cfg.Data.RocketMQ.DepositTopic, nil
+		return cfg.Data.Rocketmq.DepositTopic, nil
 	case "withdraw":
-		return cfg.Data.RocketMQ.WithdrawTopic, nil
+		return cfg.Data.Rocketmq.WithdrawTopic, nil
 	case "":
 		if fallback == "" {
 			return "", fmt.Errorf("kind 和消息 topic 不能同时为空")

@@ -7,18 +7,18 @@ import (
 	"matching-service/internal/conf"
 	"matching-service/internal/data"
 	"matching-service/internal/service"
-	"matching-service/pkg/lock"
+	"matching-service/pkg/toolbox/redisx"
 )
 
 // HealthChecker 负责检查服务依赖健康状态。
 type HealthChecker struct {
 	cfg       *conf.Bootstrap // cfg 是服务配置
 	data      *data.Data      // data 是数据库资源
-	shardLock *lock.RedisLock // shardLock 是 Redis 锁资源
+	shardLock *redisx.Lock    // shardLock 是 Redis 分片锁
 }
 
 // NewHealthChecker 创建健康检查器。
-func NewHealthChecker(cfg *conf.Bootstrap, data *data.Data, shardLock *lock.RedisLock) *HealthChecker {
+func NewHealthChecker(cfg *conf.Bootstrap, data *data.Data, shardLock *redisx.Lock) *HealthChecker {
 	return &HealthChecker{cfg: cfg, data: data, shardLock: shardLock}
 }
 
@@ -59,7 +59,7 @@ func (c *HealthChecker) checkRedis(ctx context.Context) service.HealthComponent 
 
 // checkRocketMQ 检查 RocketMQ producer 是否可启动。
 func (c *HealthChecker) checkRocketMQ(ctx context.Context) service.HealthComponent {
-	producer, err := NewRocketMQProducer(c.cfg.Data.RocketMQ)
+	producer, err := NewRocketMQProducer(c.cfg.Data.Rocketmq)
 	if err != nil {
 		return service.HealthComponent{Name: "rocketmq", OK: false, Message: err.Error()}
 	}

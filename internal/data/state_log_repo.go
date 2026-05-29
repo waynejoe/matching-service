@@ -5,7 +5,7 @@ import (
 
 	"gorm.io/gorm"
 
-	"matching-service/internal/model"
+	"matching-service/pkg/model"
 )
 
 // StateLogRepo 负责状态流水数据访问。
