@@ -54,12 +54,10 @@ import v1 "matching-service/pkg/api/matching/v1"
 - `GetBasket`：查询出金篮子状态。
 - `GetMatch`：查询撮合结果和入金明细。
 - `CheckHealth`：检查 MySQL、Redis、RocketMQ 是否可用。
-- `GetMetrics`：查询当前进程内存指标。
 
 ## 健康检查和指标
 
 - `CheckHealth` 返回整体可用状态和每个组件状态。
-- `GetMetrics` 返回消费成功/失败、撮合成功、少发成交、过期处理、事件失败和事件重试计数。
 - Prometheus 指标地址：`http://127.0.0.1:8203/metrics`。
 - Prometheus 暴露 Go 运行时、进程指标和 `matching_*` 业务指标。
 - 指标保存在当前服务进程内存里，服务重启后重新计数。

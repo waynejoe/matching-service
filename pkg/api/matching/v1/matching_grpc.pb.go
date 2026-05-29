@@ -26,7 +26,6 @@ const (
 	MatchingService_GetBasket_FullMethodName      = "/matching.v1.MatchingService/GetBasket"
 	MatchingService_GetMatch_FullMethodName       = "/matching.v1.MatchingService/GetMatch"
 	MatchingService_CheckHealth_FullMethodName    = "/matching.v1.MatchingService/CheckHealth"
-	MatchingService_GetMetrics_FullMethodName     = "/matching.v1.MatchingService/GetMetrics"
 )
 
 // MatchingServiceClient is the client API for MatchingService service.
@@ -49,8 +48,6 @@ type MatchingServiceClient interface {
 	GetMatch(ctx context.Context, in *GetMatchRequest, opts ...grpc.CallOption) (*GetMatchReply, error)
 	// CheckHealth 检查服务依赖健康状态。
 	CheckHealth(ctx context.Context, in *CheckHealthRequest, opts ...grpc.CallOption) (*CheckHealthReply, error)
-	// GetMetrics 查询服务运行指标。
-	GetMetrics(ctx context.Context, in *GetMetricsRequest, opts ...grpc.CallOption) (*GetMetricsReply, error)
 }
 
 type matchingServiceClient struct {
@@ -131,16 +128,6 @@ func (c *matchingServiceClient) CheckHealth(ctx context.Context, in *CheckHealth
 	return out, nil
 }
 
-func (c *matchingServiceClient) GetMetrics(ctx context.Context, in *GetMetricsRequest, opts ...grpc.CallOption) (*GetMetricsReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetMetricsReply)
-	err := c.cc.Invoke(ctx, MatchingService_GetMetrics_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // MatchingServiceServer is the server API for MatchingService service.
 // All implementations must embed UnimplementedMatchingServiceServer
 // for forward compatibility.
@@ -161,8 +148,6 @@ type MatchingServiceServer interface {
 	GetMatch(context.Context, *GetMatchRequest) (*GetMatchReply, error)
 	// CheckHealth 检查服务依赖健康状态。
 	CheckHealth(context.Context, *CheckHealthRequest) (*CheckHealthReply, error)
-	// GetMetrics 查询服务运行指标。
-	GetMetrics(context.Context, *GetMetricsRequest) (*GetMetricsReply, error)
 	mustEmbedUnimplementedMatchingServiceServer()
 }
 
@@ -193,9 +178,6 @@ func (UnimplementedMatchingServiceServer) GetMatch(context.Context, *GetMatchReq
 }
 func (UnimplementedMatchingServiceServer) CheckHealth(context.Context, *CheckHealthRequest) (*CheckHealthReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method CheckHealth not implemented")
-}
-func (UnimplementedMatchingServiceServer) GetMetrics(context.Context, *GetMetricsRequest) (*GetMetricsReply, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetMetrics not implemented")
 }
 func (UnimplementedMatchingServiceServer) mustEmbedUnimplementedMatchingServiceServer() {}
 func (UnimplementedMatchingServiceServer) testEmbeddedByValue()                         {}
@@ -344,24 +326,6 @@ func _MatchingService_CheckHealth_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MatchingService_GetMetrics_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMetricsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MatchingServiceServer).GetMetrics(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: MatchingService_GetMetrics_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MatchingServiceServer).GetMetrics(ctx, req.(*GetMetricsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // MatchingService_ServiceDesc is the grpc.ServiceDesc for MatchingService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -396,10 +360,6 @@ var MatchingService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckHealth",
 			Handler:    _MatchingService_CheckHealth_Handler,
-		},
-		{
-			MethodName: "GetMetrics",
-			Handler:    _MatchingService_GetMetrics_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -196,11 +196,6 @@ func (uc *MatchingUsecase) GetMatch(ctx context.Context, matchNo, basketNo, with
 	return &MatchDetail{Record: record, Deposits: deposits}, nil
 }
 
-// Metrics 返回当前运行指标快照。
-func (uc *MatchingUsecase) Metrics() Snapshot {
-	return uc.metrics.Snapshot()
-}
-
 // submitDepositLocked 在分片锁内提交入金并尝试撮合。
 func (uc *MatchingUsecase) submitDepositLocked(ctx context.Context, deposit *model.DepositOrder) (engine.MatchResult, error) {
 	if deposit.Status == 0 {

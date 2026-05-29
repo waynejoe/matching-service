@@ -23,8 +23,6 @@ service MatchingService {
   rpc GetMatch(GetMatchRequest) returns (GetMatchReply);
   // CheckHealth 检查服务依赖健康状态。
   rpc CheckHealth(CheckHealthRequest) returns (CheckHealthReply);
-  // GetMetrics 查询服务运行指标。
-  rpc GetMetrics(GetMetricsRequest) returns (GetMetricsReply);
 }
 
 // CreateBasketRequest 是创建出金撮合篮子的请求。
@@ -149,35 +147,6 @@ message HealthComponent {
   bool ok = 2;
   // message 是组件健康说明。
   string message = 3;
-}
-
-// GetMetricsRequest 是指标查询请求。
-message GetMetricsRequest {}
-
-// GetMetricsReply 是指标查询响应。
-message GetMetricsReply {
-  // deposit_consume_success 是入金消息消费成功次数。
-  int64 deposit_consume_success = 1;
-  // deposit_consume_failed 是入金消息消费失败次数。
-  int64 deposit_consume_failed = 2;
-  // withdraw_consume_success 是出金消息消费成功次数。
-  int64 withdraw_consume_success = 3;
-  // withdraw_consume_failed 是出金消息消费失败次数。
-  int64 withdraw_consume_failed = 4;
-  // match_success 是足额撮合成功次数。
-  int64 match_success = 5;
-  // short_match_success 是少发撮合成功次数。
-  int64 short_match_success = 6;
-  // expired_waiting_deposits 是等待中入金单过期次数。
-  int64 expired_waiting_deposits = 7;
-  // expired_locked_deposits 是锁定中入金单过期次数。
-  int64 expired_locked_deposits = 8;
-  // expired_baskets 是出金篮子过期次数。
-  int64 expired_baskets = 9;
-  // event_failed 是事件处理失败次数。
-  int64 event_failed = 10;
-  // event_retried 是事件重试次数。
-  int64 event_retried = 11;
 }
 
 // MatchResult 是一次撮合尝试的结果。
